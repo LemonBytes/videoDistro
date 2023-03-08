@@ -84,8 +84,8 @@ ipython_config.py
 # pyenv
 .python-version
 
-#JavaScript
-*.js
+#Json
+*.json
 
 
 # pipenv
@@ -104,6 +104,8 @@ celerybeat.pid
 
 #videos
 *.mp4
+
+#
 
 # SageMath parsed files
 *.sage.py
