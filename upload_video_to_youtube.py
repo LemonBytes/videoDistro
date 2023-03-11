@@ -6,6 +6,7 @@ from googleapiclient.http import MediaFileUpload
 
 
 def upload_video_to_youtube():
+
     text_file = open("texts/titles.txt", "r")
     # take the last line of the file
     title = text_file.readlines()[-1]
@@ -43,3 +44,5 @@ def upload_video_to_youtube():
         response = request.execute()
 
         print(response)
+
+upload_video_to_youtube()
