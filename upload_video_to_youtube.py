@@ -38,7 +38,7 @@ def upload_video_to_youtube():
             },
 
 
-            media_body=MediaFileUpload("edited_video.mp4")
+            media_body=MediaFileUpload("../outputVideo/edited_video.mp4")
         )
         response = request.execute()
 
