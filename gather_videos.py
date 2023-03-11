@@ -29,9 +29,8 @@ def download_gfycat_videos(url):
     video_url = soup.find('source', type='video/mp4')['src']
 
     # download the video
-    urllib.request.urlretrieve(video_url, os.path.basename("video.mp4"))
+    urllib.request.urlretrieve(video_url, "../inputVideo/video.mp4")
     # save the video to a folder
-    os.rename(os.path.basename("video.mp4"),  os.path.basename("../inputVideo/video.mp4"))
     write_to_file(url)
     return True
 
