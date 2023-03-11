@@ -1,6 +1,5 @@
 # create a script which downloads all the videos from a reddit thread
 # and saves them to a folder
-
 import praw
 import urllib.request
 import os
@@ -28,11 +27,11 @@ def download_gfycat_videos(url):
     site = requests.get(url, headers=headers)
     soup = BeautifulSoup(site.content, 'html.parser')
     video_url = soup.find('source', type='video/mp4')['src']
-    print(video_url)
+
     # download the video
     urllib.request.urlretrieve(video_url, os.path.basename("video.mp4"))
     # save the video to a folder
-    os.rename(os.path.basename("video.mp4"),  os.path.basename("video.mp4"))
+    os.rename(os.path.basename("video.mp4"),  os.path.basename("../inputVideo/video.mp4"))
     write_to_file(url)
     return True
 
@@ -45,9 +44,8 @@ def download_streamable_videos(url):
         video_url = soup.find('video', class_='video-player-tag')['src']
     except:
         return False
-    print(video_url)
-
-    with open('video.mp4', 'wb') as f_out:
+    
+    with open('../inputVideo/video.mp4', 'wb') as f_out:
         r = requests.get("https:" + video_url, stream=True)
         for chunk in r.iter_content(chunk_size=1024*1024):
             if chunk:
