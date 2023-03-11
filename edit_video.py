@@ -1,7 +1,6 @@
 # edit the video video.mp4 so that it shows a text war of mind
 from moviepy.editor import *
 import os
-from mediapipe.tasks.python import text
 
 IMAGEMAGICK_BINARY = os.getenv(
     'IMAGEMAGICK_BINARY', 'C:\Program Files\ImageMagick-7.0.8-Q16\magick.exe')
