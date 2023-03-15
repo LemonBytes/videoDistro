@@ -15,7 +15,6 @@ def upload_video_to_youtube():
         scopes = ["https://www.googleapis.com/auth/youtube.upload"]
         # *DO NOT* leave this option enabled in production.
         os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-
         api_service_name = "youtube"
         api_version = "v3"
         client_secrets_file = "client_secrets.json"
@@ -28,21 +27,18 @@ def upload_video_to_youtube():
             api_service_name, api_version, credentials=credentials)
 
         request = youtube.videos().insert(
-
             part="snippet",
             body={
                 "kind": "youtube#shorts",
                 "snippet": {
                     "title": f'{title}',
-                    "description": "test video"
+                    "description": "A fight is a physical manifestation of the interplay between the body and mind. The body is the vehicle through which the mind expresses itself, and the mind is the driver that directs the body's actions. In a fight, the body and mind work in tandem to overcome obstacles and achieve victory. The outcome of the fight depends on the harmony and synchronization between the body and mind, as well as the warrior's ability to stay present and centered amidst the chaos of battle."
                 }
             },
 
 
-            media_body=MediaFileUpload("../outputVideo/edited_video.mp4")
+            media_body=MediaFileUpload("../inputVideo/video.mp4")
         )
         response = request.execute()
 
         print(response)
-
-upload_video_to_youtube()
