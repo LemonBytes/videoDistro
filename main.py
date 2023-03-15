@@ -8,12 +8,8 @@ import subprocess
 
 def main():
 
-    get_reddit_videos()
-    subprocess.call("../tieUp.sh")
-    # execute the edit_video function
-    # edit_video()
-    # upload_video_to_instagram()
-    upload_video_to_youtube()
+    subprocess.run(
+        [get_reddit_videos(), "../tieUp.sh",  upload_video_to_youtube()])
 
 
 if __name__ == "__main__":
