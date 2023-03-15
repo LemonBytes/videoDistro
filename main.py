@@ -9,7 +9,8 @@ import subprocess
 def main():
 
     get_reddit_videos()
-    subprocess.call("../tieUp.sh")
+    process = subprocess.Popen(["../tieUp.sh"])
+    process.wait()
     # execute the edit_video function
     # edit_video()
     # upload_video_to_instagram()
