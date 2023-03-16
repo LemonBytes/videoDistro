@@ -9,7 +9,7 @@ import subprocess
 def main():
 
     subprocess.run(
-        [get_reddit_videos(), "../tieUp.sh",  upload_video_to_youtube()])
+        [get_reddit_videos(), "../tieUp.sh"])
 
 
 if __name__ == "__main__":
