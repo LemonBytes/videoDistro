@@ -9,7 +9,7 @@ import subprocess
 def main():
 
     subprocess.run(
-        ['python', '-c', 'import gather_videos; gather_videos.get_reddit_videos()'])
+        ['python3', '-c', 'import gather_videos; gather_videos.get_reddit_videos()'])
     subprocess.run(["bash", "../tieUp.sh"])
 
 
