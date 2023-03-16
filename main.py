@@ -8,8 +8,8 @@ import subprocess
 
 def main():
 
-    subprocess.run(
-        [get_reddit_videos(), "../tieUp.sh"])
+    subprocess.run(get_reddit_videos())
+    subprocess.run("../tieUp.sh")
 
 
 if __name__ == "__main__":
