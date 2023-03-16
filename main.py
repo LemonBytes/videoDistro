@@ -8,7 +8,7 @@ import subprocess
 
 def main():
 
-    subprocess.run(get_reddit_videos())
+    subprocess.run([get_reddit_videos()])
     subprocess.run(["bash", "../tieUp.sh"])
 
 
