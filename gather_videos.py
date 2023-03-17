@@ -43,7 +43,7 @@ def download_streamable_videos(url):
         video_url = soup.find('video', class_='video-player-tag')['src']
     except:
         return False
-    
+
     with open('../inputVideo/video.mp4', 'wb') as f_out:
         r = requests.get("https:" + video_url, stream=True)
         for chunk in r.iter_content(chunk_size=1024*1024):
@@ -65,8 +65,8 @@ def get_reddit_videos():
     print(flair)
 
     # set up reddit instance
-    reddit = praw.Reddit(client_id='m7zKZuiCyIz4XCQ45k8EuA',
-                         client_secret='4grB2eRbkOkcVPCKv-_9cRjIlwJ7pQ', user_agent='wyzbits')
+    reddit = praw.Reddit(client_id='',
+                         client_secret='', user_agent='wyzbits')
     # get the subreddit
     for post in reddit.subreddit("MMA").search('flair:' + flair, syntax='lucene', limit=100):
         # download the video
