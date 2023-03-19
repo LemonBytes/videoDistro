@@ -105,7 +105,8 @@ def customize_video(driver):
     ActionChains(driver).send_keys(Keys.TAB * 2).perform()
     sleep(2)
     print(title)
-    ActionChains(driver).send_keys("", title).perform()
+    ActionChains(driver).send_keys(
+        "", title + "#mma #fighting #martialarts").perform()
     sleep(2)
     short_button = driver.find_element(
         By.XPATH, " /html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[3]/div/div/div[1]/div[2]")
