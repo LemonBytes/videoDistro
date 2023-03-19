@@ -1,4 +1,5 @@
 
+
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -95,7 +96,7 @@ def customize_video(driver):
     ActionChains(driver).send_keys(Keys.TAB * 20).perform()
     sleep(2)
     ActionChains(driver).send_keys(
-        '#mma#fighter#boxing#blow#mindbody#body#sport#').perform()
+        '#mma#fighter#boxing#blow#mindbody#body#sport#martialarts').perform()
     sleep(2)
 
     text_file = open("texts/titles.txt", "r")
@@ -115,10 +116,10 @@ def customize_video(driver):
     publish_button = driver.find_element(
         By.XPATH, "/html/body/div[1]/div[2]/div/main/div/main/div[2]/footer/div[2]/button[2]")
     driver.execute_script("arguments[0].click();", publish_button)
-    sleep(60)
-    print("video upload successful")
+    sleep(90)
+    print("video publish  successful")
     driver.quit()
 
 
 def upload_video():
-    login("", "")
+    login("wyzbits@gmail.com", "Hik51!AB?cd24")

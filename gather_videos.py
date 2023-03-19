@@ -1,5 +1,4 @@
-# create a script which downloads all the videos from a reddit thread
-# and saves them to a folder
+# create a script which downloads all the videos from a reddit thread and saves them to a folder
 import praw
 import urllib.request
 import os
@@ -65,8 +64,8 @@ def get_reddit_videos():
     print(flair)
 
     # set up reddit instance
-    reddit = praw.Reddit(client_id='',
-                         client_secret='', user_agent='wyzbits')
+    reddit = praw.Reddit(client_id='m7zKZuiCyIz4XCQ45k8EuA',
+                         client_secret='4grB2eRbkOkcVPCKv-_9cRjIlwJ7pQ', user_agent='wyzbits')
     # get the subreddit
     for post in reddit.subreddit("MMA").search('flair:' + flair, syntax='lucene', limit=100):
         # download the video
