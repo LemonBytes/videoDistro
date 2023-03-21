@@ -97,6 +97,9 @@ def customize_video(driver):
     sleep(2)
     ActionChains(driver).send_keys(
         '#mma#fighter#boxing#blow#mindbody#body#sport#martialarts').perform()
+    reel_button = driver.find_element(
+        By.XPATH, "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div[1]/div[3]")
+    driver.execute_script("arguments[0].click();", reel_button)
     sleep(2)
 
     text_file = open("texts/titles.txt", "r")
