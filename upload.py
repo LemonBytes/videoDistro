@@ -29,7 +29,7 @@ def login(username, password):
     options.add_experimental_option(
         'excludeSwitches', ['enable-logging', 'enable-automation'])
     options.add_argument("window-size=1280,800")
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     try:
         logged_in = False
@@ -83,6 +83,11 @@ def setup(driver):
 
 
 def customize_video(driver):
+    text_file = open("texts/titles.txt", "r")
+    # take the last line of the file
+    title = text_file.readlines()[-1]
+    text_file.close()
+    print(title)
     upload_video = driver.find_element(
         By.XPATH, "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input")
     sleep(1)
@@ -95,6 +100,12 @@ def customize_video(driver):
 
     ActionChains(driver).send_keys(Keys.TAB * 20).perform()
     sleep(2)
+    ActionChains(driver).send_keys('', title).perform()
+    sleep(1)
+    for i in range(3):
+        ActionChains(driver).send_keys(Keys.ENTER).perform()
+        ActionChains(driver).send_keys('', "follow @warofmind_").perform()
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
     ActionChains(driver).send_keys(
         '#mma#fighter#boxing#blow#mindbody#body#sport#martialarts').perform()
     reel_button = driver.find_element(
@@ -102,13 +113,9 @@ def customize_video(driver):
     driver.execute_script("arguments[0].click();", reel_button)
     sleep(2)
 
-    text_file = open("texts/titles.txt", "r")
-    # take the last line of the file
-    title = text_file.readlines()[-1]
-    text_file.close()
     ActionChains(driver).send_keys(Keys.TAB * 2).perform()
     sleep(2)
-    print(title)
+
     ActionChains(driver).send_keys(
         "", title + '#mma #fighting #martialarts').perform()
     sleep(2)
