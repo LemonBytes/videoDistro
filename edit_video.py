@@ -7,18 +7,14 @@ IMAGEMAGICK_BINARY = os.getenv(
 
 
 def edit_video():
-    clip = VideoFileClip("video.mp4")
-    clip = clip.fx(vfx.mirror_x)
-    (w, h) = clip.size
-
-    crop_width = h * 9/16
-    # x1,y1 is the top left corner, and x2, y2 is the lower right corner of the cropped area.
-
-    x1, x2 = (w - crop_width)//1.6, (w+crop_width)//1.6
-    y1, y2 = 0, h
-    cropped_clip = vfx.crop(clip, x1=x1, y1=y1, x2=x2, y2=y2)
-    txt_clip = TextClip("War of Mind", fontsize=20,
-                        color='black', font="Impact", kerning=5)
-    txt_clip = txt_clip.set_pos('bottom').set_duration(clip.duration)
-    result = CompositeVideoClip([cropped_clip, txt_clip])
-    result.write_videofile("edited_video.mp4")
+    clip = VideoFileClip("../inputVideo/video.mp4")
+    # create a subclip of the video from 0 to 55 seconds
+    clip = clip.subclip(0, 55)
+    # create a text clip
+    txt_clip = TextClip("War of Mind", fontsize=70, color='white')
+    # set the position of the text clip
+    txt_clip = txt_clip.set_pos('center').set_duration(55)
+    # overlay the text clip on the video clip
+    video = CompositeVideoClip([clip, txt_clip])
+    # write the result to a file
+    video.write_videofile("../inputVideo/cutvideo.mp4", fps=25, codec='mpeg4')

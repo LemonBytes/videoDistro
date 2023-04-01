@@ -67,18 +67,20 @@ def get_reddit_videos():
     reddit = praw.Reddit(client_id='m7zKZuiCyIz4XCQ45k8EuA',
                          client_secret='4grB2eRbkOkcVPCKv-_9cRjIlwJ7pQ', user_agent='wyzbits')
     # get the subreddit
-    for post in reddit.subreddit("MMA").search('flair:' + flair, syntax='lucene', limit=100):
+    for post in reddit.subreddit("MMA").search('flair:' + flair, syntax='lucene', limit=1000):
         # download the video
         if "gfycat" in post.url:
             if is_video_unused(post.url):
                 if download_gfycat_videos(post.url):
                     # write the title to /texts/titles.txt
                     with open('texts/titles.txt', 'a') as f:
+                        print(post.title)
                         f.write(post.title + '\n')
                     break
         if "streamable" in post.url:
             if is_video_unused(post.url):
                 if download_streamable_videos(post.url):
                     with open('texts/titles.txt', 'a') as f:
+                        print(post.title)
                         f.write(post.title + '\n')
                     break
