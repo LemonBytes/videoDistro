@@ -29,7 +29,7 @@ def login(username, password):
     options.add_experimental_option(
         'excludeSwitches', ['enable-logging', 'enable-automation'])
     options.add_argument("window-size=1280,800")
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     try:
         logged_in = False
@@ -106,6 +106,7 @@ def customize_video(driver):
         ActionChains(driver).send_keys(Keys.ENTER).perform()
         ActionChains(driver).send_keys('', "follow @warofmind_").perform()
     ActionChains(driver).send_keys(Keys.ENTER).perform()
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
     ActionChains(driver).send_keys(
         '#mma#fighter#boxing#blow#mindbody#body#sport#martialarts').perform()
     reel_button = driver.find_element(
@@ -126,7 +127,7 @@ def customize_video(driver):
     publish_button = driver.find_element(
         By.XPATH, "/html/body/div[1]/div[2]/div/main/div/main/div[2]/footer/div[2]/button[2]")
     driver.execute_script("arguments[0].click();", publish_button)
-    sleep(90)
+    sleep(120)
     print("video publish  successful")
     driver.quit()
 
