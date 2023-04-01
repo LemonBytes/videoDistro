@@ -29,7 +29,7 @@ def login(username, password):
     options.add_experimental_option(
         'excludeSwitches', ['enable-logging', 'enable-automation'])
     options.add_argument("window-size=1280,800")
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     try:
         logged_in = False
