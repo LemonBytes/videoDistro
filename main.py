@@ -1,15 +1,15 @@
 #!/usr/bin/python
+from edit_video import edit_video
 from gather_videos import *
 from upload import upload_video
 import subprocess
+from time import sleep
 
 
 def main():
-    # subprocess.run(
-    #   ['python', '-c', 'import gather_videos; gather_videos.get_reddit_videos()'])
-   # subprocess.run(["bash", "../tieUp.sh"])
-    subprocess.run(['python', '-c', 'import upload; upload.upload_video()'])
-
+    get_reddit_videos()
+    sleep(20)
+    upload_video()
 
 
 if __name__ == "__main__":
