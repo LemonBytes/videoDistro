@@ -8,7 +8,7 @@ from time import sleep
 
 def main():
     get_reddit_videos()
-    sleep(20)
+    sleep(30)
     upload_video()
 
 
