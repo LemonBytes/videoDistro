@@ -1,10 +1,10 @@
-# create a script which downloads all the videos from a reddit thread and saves them to a folder
-import praw
+import asyncpraw
 import urllib.request
 import os
 import requests
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'}
 
@@ -21,7 +21,7 @@ def write_to_file(url):
         f.write(url + '\n')
 
 
-def download_gfycat_videos(url):
+async def download_gfycat_videos(url):
     # get the video url
     site = requests.get(url, headers=headers)
     soup = BeautifulSoup(site.content, 'html.parser')
@@ -34,7 +34,7 @@ def download_gfycat_videos(url):
     return True
 
 
-def download_streamable_videos(url):
+async def download_streamable_videos(url):
     # get the video url
     site = requests.get(url, headers=headers)
     soup = BeautifulSoup(site.content, 'html.parser')
@@ -52,7 +52,7 @@ def download_streamable_videos(url):
     return True
 
 
-def get_reddit_videos():
+async def get_reddit_videos():
     flair = ""
     # 50 chances to get a one of the flairs
     import random
@@ -64,14 +64,14 @@ def get_reddit_videos():
     print(flair)
 
     # set up reddit instance
-    reddit = praw.Reddit(client_id='m7zKZuiCyIz4XCQ45k8EuA',
+    reddit = asyncpraw.Reddit(client_id='m7zKZuiCyIz4XCQ45k8EuA',
                          client_secret='4grB2eRbkOkcVPCKv-_9cRjIlwJ7pQ', user_agent='wyzbits')
     # get the subreddit
-    for post in reddit.subreddit("MMA").search('flair:' + flair, syntax='lucene', limit=1000):
+    async for post in reddit.subreddit("MMA").search('flair:' + flair, syntax='lucene', limit=1000):
         # download the video
         if "gfycat" in post.url:
             if is_video_unused(post.url):
-                if download_gfycat_videos(post.url):
+                if await download_gfycat_videos(post.url):
                     # write the title to /texts/titles.txt
                     with open('texts/titles.txt', 'a') as f:
                         print(post.title)
@@ -79,7 +79,7 @@ def get_reddit_videos():
                     break
         if "streamable" in post.url:
             if is_video_unused(post.url):
-                if download_streamable_videos(post.url):
+                if await download_streamable_videos(post.url):
                     with open('texts/titles.txt', 'a') as f:
                         print(post.title)
                         f.write(post.title + '\n')
