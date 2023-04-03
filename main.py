@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import asyncio
 from edit_video import edit_video
 from gather_videos import *
 from upload import upload_video
@@ -7,7 +8,7 @@ from time import sleep
 
 
 def main():
-    get_reddit_videos()
+    # asyncio.run(get_reddit_videos())
     upload_video()
 
 
