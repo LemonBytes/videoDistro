@@ -12,9 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
-from threading import Lock
 from random import choice, randint
-from colorama import init, Fore, Style
 from time import sleep
 from os import name, system
 from sys import stdout
@@ -29,7 +27,7 @@ def login(username, password):
     options.add_experimental_option(
         'excludeSwitches', ['enable-logging', 'enable-automation'])
     options.add_argument("window-size=1280,800")
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     try:
         logged_in = False
