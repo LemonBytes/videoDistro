@@ -1,4 +1,4 @@
-import asyncpraw
+import praw
 import urllib.request
 import os
 import requests
@@ -64,10 +64,10 @@ async def get_reddit_videos():
     print(flair)
 
     # set up reddit instance
-    reddit = asyncpraw.Reddit(client_id='m7zKZuiCyIz4XCQ45k8EuA',
+    reddit = praw.Reddit(client_id='m7zKZuiCyIz4XCQ45k8EuA',
                          client_secret='4grB2eRbkOkcVPCKv-_9cRjIlwJ7pQ', user_agent='wyzbits')
     # get the subreddit
-    async for post in reddit.subreddit("MMA").search('flair:' + flair, syntax='lucene', limit=1000):
+    for post in reddit.subreddit("MMA").search('flair:' + flair, syntax='lucene', limit=1000):
         # download the video
         if "gfycat" in post.url:
             if is_video_unused(post.url):
