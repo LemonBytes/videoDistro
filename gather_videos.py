@@ -1,4 +1,6 @@
-import praw
+from asyncore import loop
+from dotenv import dotenv_values
+import asyncpraw
 import urllib.request
 import os
 import requests
@@ -21,11 +23,11 @@ def write_to_file(url):
         f.write(url + '\n')
 
 
-async def download_gfycat_videos(url):
+def download_gfycat_videos(url):
     # get the video url
-    site = requests.get(url, headers=headers)
-    soup = BeautifulSoup(site.content, 'html.parser')
-    video_url = soup.find('source', type='video/mp4')['src']
+    site =  requests.get(url, headers=headers)
+    soup =   BeautifulSoup(site.content, 'html.parser')
+    video_url =  soup.find('source', type='video/mp4')['src']
 
     # download the video
     urllib.request.urlretrieve(video_url, "../inputVideo/video.mp4")
@@ -36,8 +38,8 @@ async def download_gfycat_videos(url):
 
 async def download_streamable_videos(url):
     # get the video url
-    site = requests.get(url, headers=headers)
-    soup = BeautifulSoup(site.content, 'html.parser')
+    site =  requests.get(url, headers=headers)
+    soup =  BeautifulSoup(site.content, 'html.parser')
     try:
         video_url = soup.find('video', class_='video-player-tag')['src']
     except:
@@ -52,35 +54,37 @@ async def download_streamable_videos(url):
     return True
 
 
-async def get_reddit_videos():
+async def get_reddit_videos(loop):
     flair = ""
     # 50 chances to get a one of the flairs
     import random
-    if random.random() < 0.5:
+    if random.random() < 0.4:
         flair = "FIGHT CLIP"
     else:
         flair = "Highlights"
 
     print(flair)
-
+    config = dotenv_values(".env")
     # set up reddit instance
-    reddit = praw.Reddit(client_id='m7zKZuiCyIz4XCQ45k8EuA',
-                         client_secret='4grB2eRbkOkcVPCKv-_9cRjIlwJ7pQ', user_agent='wyzbits')
-    # get the subreddit
-    for post in reddit.subreddit("MMA").search('flair:' + flair, syntax='lucene', limit=1000):
-        # download the video
-        if "gfycat" in post.url:
-            if is_video_unused(post.url):
-                if await download_gfycat_videos(post.url):
-                    # write the title to /texts/titles.txt
-                    with open('texts/titles.txt', 'a') as f:
-                        print(post.title)
-                        f.write(post.title + '\n')
-                    break
-        if "streamable" in post.url:
-            if is_video_unused(post.url):
-                if await download_streamable_videos(post.url):
-                    with open('texts/titles.txt', 'a') as f:
-                        print(post.title)
-                        f.write(post.title + '\n')
-                    break
+    async with asyncpraw.Reddit(client_id=config['CLIENT_ID'],
+                         client_secret=config['CLIENT_SECRET'], user_agent='wyzbits') as reddit:
+        subreddit = await reddit.subreddit("MMA")
+        async for post in subreddit.search('flair:' + flair, syntax='lucene', limit=None):
+            # download the video
+            if "gfycat" in post.url:
+                if is_video_unused(post.url):
+                    if download_gfycat_videos(post.url):
+                        # write the title to /texts/titles.txt
+                        with open('texts/titles.txt', 'a') as f:
+                            print(post.title)
+                            f.write(post.title + '\n')
+                            loop.stop()
+                        break
+            if "streamable" in post.url:
+                if is_video_unused(post.url):
+                    if await download_streamable_videos(post.url):
+                        with open('texts/titles.txt', 'a') as f:
+                            print(post.title)
+                            f.write(post.title + + '\n')
+                            loop.stop()
+                        break

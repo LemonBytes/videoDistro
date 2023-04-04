@@ -10,7 +10,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
-from threading import Lock
 from random import choice, randint
 from time import sleep
 from os import name, system
@@ -22,13 +21,13 @@ def login(username, password):
 
     options = Options()
     options.add_argument("--no-sandbox")
-    # options.add_argument("--log-level=3")
+    options.add_argument("--log-level=3")
     options.add_argument("--lang=en")
     options.add_experimental_option(
         "excludeSwitches", ["enable-logging", "enable-automation"]
     )
     options.add_argument("window-size=1280,800")
-    options.add_argument("--headless")
+    #options.add_argument("--headless")
     options.add_argument("--disable-gpu")
     # driver = webdriver.Chrome(options=options)
     driver = webdriver.Chrome(
@@ -107,11 +106,22 @@ def customize_video(driver):
     print("video upload successful")
     customize_button = driver.find_element(
         By.XPATH,
-        "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/footer/div[1]/div/div/span[1]/span/span/i",
+        "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/footer/div[1]/div/div/span[1]/span/span/i",
     )
     driver.execute_script("arguments[0].click();", customize_button)
-
-    ActionChains(driver).send_keys(Keys.TAB * 20).perform()
+    sleep(3)
+    ########## INSTAGRAM ##########
+    fake_label = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div")
+    driver.execute_script("arguments[0].click();", fake_label)
+    sleep(1)
+    reel_button = driver.find_element(
+        By.XPATH,
+        "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div[1]/div[3]",
+    )
+    driver.execute_script("arguments[0].click();", reel_button) 
+    sleep(1)
+    aria_label = driver.find_element(By.XPATH, "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div/div[1]/div[1]/div/div/div")
+    driver.execute_script("arguments[0].click();", aria_label) 
     sleep(2)
     ActionChains(driver).send_keys("", title).perform()
     sleep(1)
@@ -123,34 +133,32 @@ def customize_video(driver):
     ActionChains(driver).send_keys(
         "#mma#fighter#boxing#fyp#foryou#trending#ufc#body#sport#martialarts"
     ).perform()
-    reel_button = driver.find_element(
-        By.XPATH,
-        "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div[1]/div[3]",
-    )
-    driver.execute_script("arguments[0].click();", reel_button)
+    
     sleep(2)
+
+    ########## YOUTUBE ##########
 
     ActionChains(driver).send_keys(Keys.TAB * 2).perform()
     sleep(2)
 
-    ActionChains(driver).send_keys(
-        "",
-        title
-        + "#mma #fighter #boxing #fyp #foryou #trending #mindbody #body #ufc #martialarts",
-    ).perform()
-    sleep(2)
+    ActionChains(driver).send_keys("",title ).perform()
+    sleep(1)
+    ActionChains(driver).send_keys(Keys.TAB * 1).perform()
+    ActionChains(driver).send_keys("#mma #fighter #boxing #fyp #foryou #trending #mindbody #body #ufc #martialarts").perform()
+    sleep(1)
     short_button = driver.find_element(
         By.XPATH,
         " /html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[3]/div/div/div[1]/div[2]",
     )
     driver.execute_script("arguments[0].click();", short_button)
+
     sleep(2)
     publish_button = driver.find_element(
         By.XPATH,
         "/html/body/div[1]/div[2]/div/main/div/main/div[2]/footer/div[2]/button[2]",
     )
     driver.execute_script("arguments[0].click();", publish_button)
-    sleep(120)
+    sleep(20)
     print("video publish  successful")
     driver.quit()
 
