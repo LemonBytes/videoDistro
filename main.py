@@ -10,7 +10,7 @@ from time import sleep
 def main():
     loop = asyncio.get_event_loop()
     asyncio.run(get_reddit_videos(loop))
-    upload_video()
+    #upload_video()
 
 
 if __name__ == "__main__":
