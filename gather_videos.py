@@ -35,7 +35,6 @@ def write_to_json(url, title):
 
 
 def download_gfycat_videos(url):
-    print(url)
     site = requests.get(url, headers=headers)
     soup = BeautifulSoup(site.content, "html.parser")
     try:
@@ -95,7 +94,6 @@ async def get_reddit_videos(loop):
                         print(e)
                         continue
             if "streamable" in post.url:
-                print(post.url)
                 if is_video_unused(post.url, post.title):
                     try:
                         download_streamable_videos(post.url)
