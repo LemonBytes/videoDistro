@@ -1,4 +1,7 @@
+import json
 import os
+import random
+import subprocess
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -17,8 +20,45 @@ from sys import stdout
 from dotenv import dotenv_values
 
 
-def login(username, password):
 
+def get_first_video_with_parts():
+    with open("video_parts.json", "r") as f:
+        data = json.load(f)
+        videos = data["video_parts"]
+        for video in videos:
+            if len(video["parts"]) > 0:
+                return f"./video_parts/{video['video_id']}/{video['parts'][0]}"
+    
+
+def clean_up(video_src):
+    with open("video_parts.json", "r") as f:
+        data = json.load(f)
+        videos = data["video_parts"]
+        for video in videos:
+            if len(video["parts"]) > 0:
+                video["parts"].pop(0)
+    with open("video_parts.json", "w") as f:
+        json.dump(data, f, indent=4)
+    cmd = f"rm {video_src}"
+    subprocess.run(cmd, shell=True, capture_output=True)
+    print("cleaned up")
+
+
+
+def decide_video_upload():
+    if random.random() < 0.2:
+        return get_first_video_with_parts()
+    else:
+       return "./last_video_download/video.mp4"
+
+        
+
+
+
+decide_video_upload()
+
+
+def login(username, password):
     options = Options()
     options.add_argument("--no-sandbox")
     options.add_argument("--log-level=3")
@@ -90,20 +130,25 @@ def setup(driver):
     customize_video(driver)
 
 
-def customize_video(driver):
-    text_file = open("texts/titles.txt", "r")
-    # take the last line of the file
-    title = text_file.readlines()[-1]
-    text_file.close()
-    print(title)
+def upload_video(driver):
     upload_video = driver.find_element(
         By.XPATH,
         "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input",
     )
     sleep(1)
     upload_video.send_keys(os.path.abspath("../inputVideo/video.mp4"))
-    sleep(15)
+    sleep(5)
     print("video upload successful")
+
+
+
+def customize_video(driver):
+    text_file = open("texts/titles.txt", "r")
+    # take the last line of the file
+    title = text_file.readlines()[-1]
+    text_file.close()
+    print(title)
+
     customize_button = driver.find_element(
         By.XPATH,
         "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/footer/div[1]/div/div/span[1]/span/span/i",

@@ -1,13 +1,19 @@
 {
-    "videos_parts": [
-        {   "video_url":"",
-            "video_title": "",
-            "video_parts": [
-                {
-                    "part_number": "",
-                    "part_src": ""
-
-                }
+    "video_parts": [
+        {
+            "video_id": "watch?v=BV3FcAecXL0",
+            "video_title": "Jon Jones vs Chael Sonnen | UFC 159",
+            "video_url": "https://www.youtube.com/watch?v=BV3FcAecXL0",
+            "parts": [
+                "output_video_part_0.mp4",
+                "output_video_part_1.mp4",
+                "output_video_part_2.mp4",
+                "output_video_part_3.mp4",
+                "output_video_part_4.mp4",
+                "output_video_part_5.mp4",
+                "output_video_part_6.mp4",
+                "output_video_part_7.mp4",
+                "output_video_part_8.mp4"
             ]
         }
     ]

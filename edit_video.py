@@ -9,10 +9,10 @@ import os
 
 # sys.setrecursionlimit(10000)
 
-SEGEMENT = 45
+SEGEMENT = 59
 
 
-def extract_last_video_id():
+def extract_last_video():
     with open("videos.json", "r") as f:
         data = json.load(f)
         videos = data["videos"]
@@ -20,7 +20,9 @@ def extract_last_video_id():
         video_url = last_video["video_url"]
         # return the last part after .com/ of the string
         video_id = video_url.split("/")[-1]
-        return video_id
+        video_title = last_video["video_title"]
+        video_url = last_video["video_url"]
+        return {"video_id": video_id, "video_title": video_title, "video_url": video_url}
 
 
 def get_video_seconds():
@@ -33,6 +35,31 @@ def get_video_seconds():
     for time in output.split(":"):
         seconds = seconds * 60 + float(time)
     return seconds
+
+
+def update_json_parts(video_id):
+    video = extract_last_video()
+    parts = []
+    #list the files alpabetically
+    for file in sorted(os.listdir(f"./video_parts/{video_id}")):
+        if file.endswith(".mp4"):
+            parts.append(file)
+    with open("video_parts.json", "r") as f:
+        data = json.load(f)
+        videos = data["video_parts"]
+        videos.append(
+            {
+                "video_id": video["video_id"],
+                "video_title": video["video_title"],
+                "video_url": video["video_url"],
+                "parts": parts,
+            }
+        )
+    with open("video_parts.json", "w") as f:
+        json.dump(data, f, indent=4)
+
+
+    
 
 
 def get_video_file_size():
@@ -70,7 +97,7 @@ def get_cutting_part(seconds, rest, segment_time=SEGEMENT, depth=1):
 
     approximation = base_approximation / depth
 
-    if segment_time - rest < 2 and rest <= SEGEMENT and segment_time <= SEGEMENT:
+    if segment_time - rest < 3 and rest <= SEGEMENT and segment_time <= SEGEMENT:
         return segment_time
     parts = floor(seconds / segment_time)
     if not depth % 2 == 0:
@@ -83,15 +110,19 @@ def get_cutting_part(seconds, rest, segment_time=SEGEMENT, depth=1):
 
 
 def edit_video():
-    video_id = extract_last_video_id()
+    video_id = extract_last_video()["video_id"]
     file_size = get_video_file_size()
     seconds = get_video_seconds()
+    print(video_id)
 
-    print("Rest of the video: ", seconds % SEGEMENT)
+    if (seconds <= 60 and file_size > 50):
+        seconds = get_video_seconds()
+    else:
+        segment_time = get_cutting_part(seconds, seconds % SEGEMENT)
+        create_folder(video_id)
+        cut_video(video_id, segment_time)
+        update_json_parts(video_id)
 
-    segment_time = get_cutting_part(seconds, seconds % SEGEMENT)
-    create_folder(video_id)
-    cut_video(video_id, segment_time)
 
 
 edit_video()
