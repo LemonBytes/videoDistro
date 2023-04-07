@@ -84,8 +84,7 @@ ipython_config.py
 # pyenv
 .python-version
 
-#Json
-*.json
+
 
 
 # pipenv
