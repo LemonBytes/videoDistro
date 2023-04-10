@@ -17,9 +17,8 @@ def is_video_unused(url, title):
     with open("videos.json", "r") as f:
         data = json.load(f)
         videos = data["videos"]
-        for video in videos:
-            if video["video_url"] == url:
-                return False
+        if (url in [video["video_url"] for video in videos]) or (title in [video["video_title"] for video in videos]):
+            return False
     return True
 
 
@@ -35,29 +34,31 @@ def write_to_json(url, title):
 
 
 def download_gfycat_videos(url):
-    site = requests.get(url, headers=headers)
-    soup = BeautifulSoup(site.content, "html.parser")
     try:
+        site = requests.get(url, headers=headers)
+        soup = BeautifulSoup(site.content, "html.parser")
         video_url = soup.find("source", type="video/mp4")["src"]
-        urllib.request.urlretrieve(video_url, "./videos/video.mp4")
+        urllib.request.urlretrieve(video_url, "./last_video_download/video.mp4")
         print("finished downloading video")
     except Exception as e:
-        raise Exception("Error downloading video")
+        print(e)
+        #raise Exception("Error downloading video")
 
 
 def download_streamable_videos(url):
-    site = requests.get(url, headers=headers)
-    soup = BeautifulSoup(site.content, "html.parser")
     try:
+        site = requests.get(url, headers=headers)
+        soup = BeautifulSoup(site.content, "html.parser")
         video_url = soup.find("video", class_="video-player-tag")["src"]
-        with open("./videos/video.mp4", "wb") as f_out:
+        with open("./last_video_download/video.mp4", "wb") as f_out:
             r = requests.get("https:" + video_url, stream=True)
             for chunk in r.iter_content(chunk_size=1024 * 1024):
                 if chunk:
                     f_out.write(chunk)
         print("finished downloading video")
     except Exception as e:
-        raise Exception("Error downloading video")
+        print(e)
+        #raise Exception("Error downloading video")
 
 
 async def get_reddit_videos(loop):
@@ -65,7 +66,7 @@ async def get_reddit_videos(loop):
     # 50 chances to get a one of the flairs
     import random
 
-    if random.random() < 0.4:
+    if random.random() < 0.5:
         flair = "FIGHT CLIP"
     else:
         flair = "Highlights"
@@ -79,12 +80,12 @@ async def get_reddit_videos(loop):
         user_agent="wyzbits",
     ) as reddit:
         subreddit = await reddit.subreddit("MMA")
-        async for post in subreddit.search(
-            "flair:" + flair, syntax="lucene", limit=None
-        ):
+        async for post in subreddit.search("flair:" + flair, syntax="lucene", limit=None):
             # # download the video
             if "gfycat" in post.url:
                 if is_video_unused(post.url, post.title):
+                    print(post.url)
+                    print(post.title)
                     try:
                         download_gfycat_videos(post.url)
                         write_to_json(post.url, post.title)
@@ -94,6 +95,8 @@ async def get_reddit_videos(loop):
                         print(e)
                         continue
             if "streamable" in post.url:
+                print(post.url)
+                print(post.title)
                 if is_video_unused(post.url, post.title):
                     try:
                         download_streamable_videos(post.url)

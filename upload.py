@@ -13,24 +13,24 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
-from random import choice, randint
 from time import sleep
 from os import name, system
 from sys import stdout
 from dotenv import dotenv_values
+from edit_video import write_to_queue 
 
 
 
 def get_first_video_with_parts():
-    with open("video_parts.json", "r") as f:
-        data = json.load(f)
+    with open("video_parts.json", "r") as file:
+        data = json.load(file)
         videos = data["video_parts"]
         for video in videos:
             if len(video["parts"]) > 0:
                 return f"./video_parts/{video['video_id']}/{video['parts'][0]}"
     
 
-def clean_up(video_src):
+def clean_up():
     with open("video_parts.json", "r") as f:
         data = json.load(f)
         videos = data["video_parts"]
@@ -39,23 +39,29 @@ def clean_up(video_src):
                 video["parts"].pop(0)
     with open("video_parts.json", "w") as f:
         json.dump(data, f, indent=4)
-    cmd = f"rm {video_src}"
-    subprocess.run(cmd, shell=True, capture_output=True)
-    print("cleaned up")
+
+
+
 
 
 
 def decide_video_upload():
-    if random.random() < 0.2:
-        return get_first_video_with_parts()
-    else:
-       return "./last_video_download/video.mp4"
-
-        
-
-
+    if random.random() < 0.3:
+        video = get_first_video_with_parts()
+        write_to_queue(f"{video}", f"{video.split('/')[-1]}")
+        clean_up()
 
 decide_video_upload()
+
+def get_first_from_queue():
+    with open("queue.json", "r") as f:
+        data = json.load(f)
+        queue = data["queue"]
+        if len(queue) > 0:
+            return f"./video_upload_queue/{queue[0]}"
+    return None        
+
+
 
 
 def login(username, password):
@@ -136,7 +142,8 @@ def upload_video(driver):
         "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input",
     )
     sleep(1)
-    upload_video.send_keys(os.path.abspath("../inputVideo/video.mp4"))
+    video_src = get_first_from_queue()
+    upload_video.send_keys(os.path.abspath(f"{video_src}"))
     sleep(5)
     print("video upload successful")
 

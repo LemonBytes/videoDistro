@@ -9,7 +9,7 @@ import os
 
 # sys.setrecursionlimit(10000)
 
-SEGEMENT = 59
+SEGEMENT = 45
 
 
 def extract_last_video():
@@ -27,14 +27,15 @@ def extract_last_video():
 
 def get_video_seconds():
     # get video length
-    cmd_str = 'ffmpeg -i ./last_video_download/video.mp4 2>&1 | grep "Duration" | cut -d " " -f 4 | sed s/,//'
-    # out = subprocess.run(cmd_str, shell=True, capture_output=True)
-    output = subprocess.check_output(cmd_str, shell=True)
+    cmd = "ffmpeg -i ./last_video_download/video.mp4 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//"
+    output = subprocess.check_output(cmd, shell=True)
     output = output.decode("utf-8")
+
     seconds = 0
     for time in output.split(":"):
         seconds = seconds * 60 + float(time)
     return seconds
+
 
 
 def update_json_parts(video_id):
@@ -59,6 +60,13 @@ def update_json_parts(video_id):
         json.dump(data, f, indent=4)
 
 
+def get_first_video_with_parts():
+    with open("video_parts.json", "r") as file:
+        data = json.load(file)
+        videos = data["video_parts"]
+        for video in videos:
+            if len(video["parts"]) > 0:
+                return f"./video_parts/{video['video_id']}/{video['parts'][0]}"
     
 
 
@@ -78,26 +86,56 @@ def create_folder(video_id):
 
 
 def cut_video(video_id, seconds_split):
-    cut_video_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -f segment -segment_time {seconds_split} -vcodec copy -acodec copy -reset_timestamps 1 -map 0:0 -map 0:1 ./video_parts/{video_id}/output_video_part_%d.mp4"
+    cut_video_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -f segment -segment_time {seconds_split} -vcodec copy -acodec copy -reset_timestamps 1 -map 0:0 -map 0:1 ./video_parts/{video_id}/{video_id}_video_part_%d.mp4"
     subprocess.run(cut_video_cmd, shell=True)
 
 
 def compress_video():
-    compress_video_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -vcodec libx264 -crf 23 ./last_video_download/video.mp4"
+    compress_video_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -vcodec libx264 -crf 23 ./last_video_download/video.mp4 "
     subprocess.run(compress_video_cmd, shell=True)
 
+def write_to_queue(scrFolder, video_name):
+    cmd = f"mv {scrFolder} ./video_upload_queue/{video_name}"
+    #write to queue json
+    with open("queue.json", "r") as f:
+        data = json.load(f)
+        queue = data["queue"]
+        queue.append(
+          video_name
+        )
+    with open("queue.json", "w") as f:
+        json.dump(data, f, indent=4)
+    subprocess.run(cmd, shell=True)
+    
+
+
+def clean_up_by_id(video_id):
+    with open("video_parts.json", "r") as f:
+        data = json.load(f)
+        videos = data["video_parts"]
+        for video in videos:
+            if video["video_id"] == video_id:
+                video["parts"].pop(0)
+    with open("video_parts.json", "w") as f:
+        json.dump(data, f, indent=4)
+   
+
+
+def delete_video():
+    delete_video_cmd = "rm -rf ./last_video_download/video.mp4"
+    subprocess.run(delete_video_cmd, shell=True)
 
 def get_cutting_part(seconds, rest, segment_time=SEGEMENT, depth=1):
-    # print(f"seconds: {seconds}")
-    # print(f"segment_time: {segment_time}")
-    # print(f"rest: {rest}")
-    # print(f"depth: {depth}")
+    print(f"seconds: {seconds}")
+    print(f"segment_time: {segment_time}")
+    print(f"rest: {rest}")
+    print(f"depth: {depth}")
 
     base_approximation = 25 * (SEGEMENT / 60)
 
     approximation = base_approximation / depth
 
-    if segment_time - rest < 3 and rest <= SEGEMENT and segment_time <= SEGEMENT:
+    if segment_time - rest < 1 and rest <= SEGEMENT and segment_time <= SEGEMENT:
         return segment_time
     parts = floor(seconds / segment_time)
     if not depth % 2 == 0:
@@ -113,16 +151,22 @@ def edit_video():
     video_id = extract_last_video()["video_id"]
     file_size = get_video_file_size()
     seconds = get_video_seconds()
-    print(video_id)
-
     if (seconds <= 60 and file_size > 50):
-        seconds = get_video_seconds()
+        compress_video(video_id)
+        write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4")
+    elif (seconds <= 60 and file_size < 50):
+       write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4")
     else:
         segment_time = get_cutting_part(seconds, seconds % SEGEMENT)
         create_folder(video_id)
         cut_video(video_id, segment_time)
         update_json_parts(video_id)
+        delete_video()
+        write_to_queue(f"video_parts/{video_id}/{video_id}_video_part_0.mp4", f"{video_id}_video_part_0.mp4")
+        clean_up_by_id(video_id)
+        
+       
 
 
 
-edit_video()
+

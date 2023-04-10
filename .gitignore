@@ -102,7 +102,7 @@ celerybeat-schedule
 celerybeat.pid
 
 #videos
-*.mp4
+
 
 #
 
