@@ -11,7 +11,7 @@ def main():
     #loop = asyncio.get_event_loop()
     #asyncio.run(get_reddit_videos(loop))
     edit_video()
-    #upload_video()
+    upload_video()
 
 
 if __name__ == "__main__":

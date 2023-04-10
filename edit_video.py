@@ -71,7 +71,7 @@ def get_first_video_with_parts():
 
 
 def get_video_file_size():
-    # get video file size
+    # get video file size with ff
     cmd_str = "du -h ./last_video_download/video.mp4 | cut -f1"
     output = subprocess.check_output(cmd_str, shell=True)
     output = output.decode("utf-8")
