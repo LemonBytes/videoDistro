@@ -4,9 +4,6 @@ import subprocess
 import re
 import os
 
-# import sys
-
-# sys.setrecursionlimit(10000)
 
 SEGEMENT = 45
 
@@ -18,7 +15,11 @@ def extract_last_video():
         last_video = videos[-1]
         video_url = last_video["video_url"]
         # return the last part after .com/ of the string
-        video_id = video_url.split("/")[-1]
+        if "youtube" in video_url:
+            video_id = video_url.split("=")[-1]
+        else:
+            video_id = video_url.split("/")[-1]
+            
         video_title = last_video["video_title"]
         video_url = last_video["video_url"]
         return {"video_id": video_id, "video_title": video_title, "video_url": video_url}
