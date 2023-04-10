@@ -118,7 +118,9 @@ def clean_up_by_id(video_id):
     with open("video_parts.json", "w") as f:
         json.dump(data, f, indent=4)
    
-
+def cut_last_three_seconds():
+    cut_last_three_seconds_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -ss 0 -t 00:00:03 -c copy ./last_video_download/video.mp4"
+    subprocess.run(cut_last_three_seconds_cmd, shell=True)
 
 def delete_video():
     delete_video_cmd = "rm -rf ./last_video_download/video.mp4"
@@ -153,8 +155,11 @@ def edit_video():
     if (seconds <= 60 and file_size > 50):
         compress_video(video_id)
         write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4")
-    elif (seconds <= 60 and file_size < 50):
+    elif (seconds <= 60):
        write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4")
+    elif (seconds > 60 and seconds <= 62):
+        cut_last_three_seconds()
+        write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4")
     else:
         segment_time = get_cutting_part(seconds, seconds % SEGEMENT)
         create_folder(video_id)
