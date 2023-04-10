@@ -94,14 +94,17 @@ def compress_video():
     compress_video_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -vcodec libx264 -crf 23 ./last_video_download/video.mp4 "
     subprocess.run(compress_video_cmd, shell=True)
 
-def write_to_queue(scrFolder, video_name):
+def write_to_queue(scrFolder, video_name, title):
     cmd = f"mv {scrFolder} ./video_upload_queue/{video_name}"
     #write to queue json
     with open("queue.json", "r") as f:
         data = json.load(f)
         queue = data["queue"]
         queue.append(
-          video_name
+             {
+            "video_src": video_name,
+            "video_title": title,
+        }
         )
     with open("queue.json", "w") as f:
         json.dump(data, f, indent=4)
@@ -151,23 +154,24 @@ def get_cutting_part(seconds, rest, segment_time=SEGEMENT, depth=1):
 
 def edit_video():
     video_id = extract_last_video()["video_id"]
+    title = extract_last_video()["video_title"]
     file_size = get_video_file_size()
     seconds = get_video_seconds()
     if (seconds <= 60 and file_size > 50):
         compress_video(video_id)
-        write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4")
+        write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4", title)
     elif (seconds <= 60):
-       write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4")
+       write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4",   title)
     elif (seconds > 60 and seconds <= 62):
         cut_last_three_seconds()
-        write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4")
+        write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4", title)
     else:
         segment_time = get_cutting_part(seconds, seconds % SEGEMENT)
         create_folder(video_id)
         cut_video(video_id, segment_time)
         update_json_parts(video_id)
         delete_video()
-        write_to_queue(f"video_parts/{video_id}/{video_id}_video_part_0.mp4", f"{video_id}_video_part_0.mp4")
+        write_to_queue(f"video_parts/{video_id}/{video_id}_video_part_0.mp4", f"{video_id}_video_part_0.mp4", title)
         clean_up_by_id(video_id)
         
        

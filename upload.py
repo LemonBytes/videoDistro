@@ -27,7 +27,8 @@ def get_first_video_with_parts():
         videos = data["video_parts"]
         for video in videos:
             if len(video["parts"]) > 0:
-                return f"./video_parts/{video['video_id']}/{video['parts'][0]}"
+                return video
+             
     
 
 def clean_up():
@@ -48,7 +49,11 @@ def clean_up():
 def decide_video_upload():
     if random.random() < 0.1:
         video = get_first_video_with_parts()
-        write_to_queue(f"{video}", f"{video.split('/')[-1]}")
+        video_id = video["video_id"]
+        video_src = video["parts"][0]
+        video_part_number = int(video_src.split("_")[-1].split(".")[0]) + 1
+        title = video["video_title"] + f"- part {video_part_number}"
+        write_to_queue(f"video_parts/{video_id}/{video_src}" , f"{video.split('/')[-1]}", title)
         clean_up()
 
 decide_video_upload()
@@ -58,7 +63,11 @@ def get_first_from_queue():
         data = json.load(f)
         queue = data["queue"]
         if len(queue) > 0:
-            return f"./video_upload_queue/{queue[0]}"
+                video = queue[0]
+                queue.pop(0)
+                with open("queue.json", "w") as f:
+                    json.dump(data, f, indent=4)
+                return video
     return None        
 
 
@@ -133,7 +142,8 @@ def setup(driver):
         account_number += 1
     print("setup successful")
     sleep(2)
-    customize_video(driver)
+    upload_video(driver)
+  
 
 
 def upload_video(driver):
@@ -142,20 +152,17 @@ def upload_video(driver):
         "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input",
     )
     sleep(1)
-    video_src = get_first_from_queue()
-    upload_video.send_keys(os.path.abspath(f"{video_src}"))
+    video = get_first_from_queue()
+    video_src = video["video_src"]
+    title = video["video_title"]
+    upload_video.send_keys(os.path.abspath(f"./video_upload_queue/{video_src}"))
     sleep(5)
     print("video upload successful")
+    customize_video(driver, title)
 
 
 
-def customize_video(driver):
-    text_file = open("texts/titles.txt", "r")
-    # take the last line of the file
-    title = text_file.readlines()[-1]
-    text_file.close()
-    print(title)
-
+def customize_video(driver, title):
     customize_button = driver.find_element(
         By.XPATH,
         "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/footer/div[1]/div/div/span[1]/span/span/i",
