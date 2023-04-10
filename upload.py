@@ -1,4 +1,7 @@
+import json
 import os
+import random
+import subprocess
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -10,15 +13,58 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
-from random import choice, randint
 from time import sleep
 from os import name, system
 from sys import stdout
 from dotenv import dotenv_values
+from edit_video import write_to_queue 
+
+
+
+def get_first_video_with_parts():
+    with open("video_parts.json", "r") as file:
+        data = json.load(file)
+        videos = data["video_parts"]
+        for video in videos:
+            if len(video["parts"]) > 0:
+                return f"./video_parts/{video['video_id']}/{video['parts'][0]}"
+    
+
+def clean_up():
+    with open("video_parts.json", "r") as f:
+        data = json.load(f)
+        videos = data["video_parts"]
+        for video in videos:
+            if len(video["parts"]) > 0:
+                video["parts"].pop(0)
+    with open("video_parts.json", "w") as f:
+        json.dump(data, f, indent=4)
+
+
+
+
+
+
+def decide_video_upload():
+    if random.random() < 0.3:
+        video = get_first_video_with_parts()
+        write_to_queue(f"{video}", f"{video.split('/')[-1]}")
+        clean_up()
+
+decide_video_upload()
+
+def get_first_from_queue():
+    with open("queue.json", "r") as f:
+        data = json.load(f)
+        queue = data["queue"]
+        if len(queue) > 0:
+            return f"./video_upload_queue/{queue[0]}"
+    return None        
+
+
 
 
 def login(username, password):
-
     options = Options()
     options.add_argument("--no-sandbox")
     options.add_argument("--log-level=3")
@@ -90,20 +136,26 @@ def setup(driver):
     customize_video(driver)
 
 
+def upload_video(driver):
+    upload_video = driver.find_element(
+        By.XPATH,
+        "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input",
+    )
+    sleep(1)
+    video_src = get_first_from_queue()
+    upload_video.send_keys(os.path.abspath(f"{video_src}"))
+    sleep(5)
+    print("video upload successful")
+
+
+
 def customize_video(driver):
     text_file = open("texts/titles.txt", "r")
     # take the last line of the file
     title = text_file.readlines()[-1]
     text_file.close()
     print(title)
-    upload_video = driver.find_element(
-        By.XPATH,
-        "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input",
-    )
-    sleep(1)
-    upload_video.send_keys(os.path.abspath("../inputVideo/video.mp4"))
-    sleep(15)
-    print("video upload successful")
+
     customize_button = driver.find_element(
         By.XPATH,
         "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/footer/div[1]/div/div/span[1]/span/span/i",
