@@ -1,7 +1,6 @@
 import json
 from math import floor
 import subprocess
-from ffmpeg import FFmpeg
 import re
 import os
 

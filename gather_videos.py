@@ -42,7 +42,7 @@ def download_gfycat_videos(url):
         print("finished downloading video")
     except Exception as e:
         print(e)
-        #raise Exception("Error downloading video")
+        raise Exception("Error downloading video")
 
 
 def download_streamable_videos(url):
@@ -58,7 +58,7 @@ def download_streamable_videos(url):
         print("finished downloading video")
     except Exception as e:
         print(e)
-        #raise Exception("Error downloading video")
+        raise Exception("Error downloading video")
 
 
 async def get_reddit_videos(loop):

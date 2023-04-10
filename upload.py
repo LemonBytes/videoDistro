@@ -46,7 +46,7 @@ def clean_up():
 
 
 def decide_video_upload():
-    if random.random() < 0.3:
+    if random.random() < 0.1:
         video = get_first_video_with_parts()
         write_to_queue(f"{video}", f"{video.split('/')[-1]}")
         clean_up()

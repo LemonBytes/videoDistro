@@ -8,8 +8,8 @@ from time import sleep
 
 
 def main():
-    #loop = asyncio.get_event_loop()
-    #asyncio.run(get_reddit_videos(loop))
+    loop = asyncio.get_event_loop()
+    asyncio.run(get_reddit_videos(loop))
     edit_video()
     upload_video()
 
