@@ -29,7 +29,17 @@ def get_first_video_with_parts():
             if len(video["parts"]) > 0:
                 return video
              
-    
+def remove_from_queue():
+    with open("queue.json", "r") as f:
+        data = json.load(f)
+        queue = data["queue"]
+        if len(queue) > 0:
+            cmd = f"rm ./video_upload_queue/{queue[0]['video_src']}"
+            subprocess.run(cmd, shell=True)
+            queue.pop(0)
+    with open("queue.json", "w") as f:
+        json.dump(data, f, indent=4)
+
 
 def clean_up():
     with open("video_parts.json", "r") as f:
@@ -55,7 +65,6 @@ def decide_video_upload():
         title = video["video_title"] + f"- part {video_part_number}"
         write_to_queue(f"video_parts/{video_id}/{video_src}" , f"{video.split('/')[-1]}", title)
         clean_up()
-
 decide_video_upload()
 
 def get_first_from_queue():
@@ -147,7 +156,7 @@ def setup(driver):
 
 
 def upload_video(driver):
-    upload_video = driver.find_element(
+    upload_video_button = driver.find_element(
         By.XPATH,
         "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input",
     )
@@ -155,7 +164,7 @@ def upload_video(driver):
     video = get_first_from_queue()
     video_src = video["video_src"]
     title = video["video_title"]
-    upload_video.send_keys(os.path.abspath(f"./video_upload_queue/{video_src}"))
+    upload_video_button.send_keys(os.path.abspath(f"./video_upload_queue/{video_src}"))
     sleep(5)
     print("video upload successful")
     customize_video(driver, title)
@@ -219,9 +228,13 @@ def customize_video(driver, title):
     driver.execute_script("arguments[0].click();", publish_button)
     sleep(20)
     print("video publish  successful")
+    remove_from_queue()
     driver.quit()
 
 
 def upload_video():
     config = dotenv_values(".env")
     login(config["PUBLER_ID"], config["PUBLER_PASSWORD"])
+
+
+

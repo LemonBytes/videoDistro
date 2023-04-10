@@ -91,7 +91,7 @@ def cut_video(video_id, seconds_split):
 
 
 def compress_video():
-    compress_video_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -vcodec libx264 -crf 23 ./last_video_download/video.mp4 "
+    compress_video_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -vcodec libx264 -crf 23 ./edit_video/video.mp4 "
     subprocess.run(compress_video_cmd, shell=True)
 
 def write_to_queue(scrFolder, video_name, title):
@@ -123,7 +123,7 @@ def clean_up_by_id(video_id):
         json.dump(data, f, indent=4)
    
 def cut_last_three_seconds():
-    cut_last_three_seconds_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -ss 0 -t 00:00:03 -c copy ./last_video_download/video.mp4"
+    cut_last_three_seconds_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -ss 0 -t 00:00:03 -c copy ./edit_video/video.mp4"
     subprocess.run(cut_last_three_seconds_cmd, shell=True)
 
 def delete_video():
@@ -131,13 +131,7 @@ def delete_video():
     subprocess.run(delete_video_cmd, shell=True)
 
 def get_cutting_part(seconds, rest, segment_time=SEGEMENT, depth=1):
-    print(f"seconds: {seconds}")
-    print(f"segment_time: {segment_time}")
-    print(f"rest: {rest}")
-    print(f"depth: {depth}")
-
     base_approximation = 25 * (SEGEMENT / 60)
-
     approximation = base_approximation / depth
 
     if segment_time - rest < 1 and rest <= SEGEMENT and segment_time <= SEGEMENT:
@@ -159,12 +153,12 @@ def edit_video():
     seconds = get_video_seconds()
     if (seconds <= 60 and file_size > 50):
         compress_video(video_id)
-        write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4", title)
+        write_to_queue("./edit_video/video.mp4", f"{video_id}_video.mp4", title)
     elif (seconds <= 60):
-       write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4",   title)
+       write_to_queue("./edit_video/video.mp4", f"{video_id}_video.mp4",   title)
     elif (seconds > 60 and seconds <= 62):
         cut_last_three_seconds()
-        write_to_queue("./last_video_download/video.mp4", f"{video_id}_video.mp4", title)
+        write_to_queue("./edit_video/video.mp4", f"{video_id}_video.mp4", title)
     else:
         segment_time = get_cutting_part(seconds, seconds % SEGEMENT)
         create_folder(video_id)
