@@ -17,7 +17,9 @@ def is_video_unused(url, title):
     with open("videos.json", "r") as f:
         data = json.load(f)
         videos = data["videos"]
-        if (url in [video["video_url"] for video in videos]) or (title in [video["video_title"] for video in videos]):
+        if (url in [video["video_url"] for video in videos]) or (
+            title in [video["video_title"] for video in videos]
+        ):
             return False
     return True
 
@@ -37,8 +39,8 @@ def download_gfycat_videos(url):
     try:
         site = requests.get(url, headers=headers)
         soup = BeautifulSoup(site.content, "html.parser")
-        video_url = soup.find("source", type="video/mp4")["src"]
-        urllib.request.urlretrieve(video_url, "./last_video_download/video.mp4")
+        video_url = soup.find("source", type="video/mp4")["src"]  # type: ignore
+        urllib.request.urlretrieve(f"{video_url}", "./last_video_download/video.mp4")
         print("finished downloading video")
     except Exception as e:
         print(e)
@@ -49,9 +51,9 @@ def download_streamable_videos(url):
     try:
         site = requests.get(url, headers=headers)
         soup = BeautifulSoup(site.content, "html.parser")
-        video_url = soup.find("video", class_="video-player-tag")["src"]
+        video_url = soup.find("video", class_="video-player-tag")["src"]  # type: ignore
         with open("./last_video_download/video.mp4", "wb") as f_out:
-            r = requests.get("https:" + video_url, stream=True)
+            r = requests.get(f"https:{video_url}", stream=True)
             for chunk in r.iter_content(chunk_size=1024 * 1024):
                 if chunk:
                     f_out.write(chunk)
@@ -80,7 +82,9 @@ async def get_reddit_videos(loop):
         user_agent="wyzbits",
     ) as reddit:
         subreddit = await reddit.subreddit("MMA")
-        async for post in subreddit.search("flair:" + flair, syntax="lucene", limit=None):
+        async for post in subreddit.search(
+            "flair:" + flair, syntax="lucene", limit=None
+        ):
             # # download the video
             if "gfycat" in post.url:
                 if is_video_unused(post.url, post.title):

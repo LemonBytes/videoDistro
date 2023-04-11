@@ -19,10 +19,14 @@ def extract_last_video():
             video_id = video_url.split("=")[-1]
         else:
             video_id = video_url.split("/")[-1]
-            
+
         video_title = last_video["video_title"]
         video_url = last_video["video_url"]
-        return {"video_id": video_id, "video_title": video_title, "video_url": video_url}
+        return {
+            "video_id": video_id,
+            "video_title": video_title,
+            "video_url": video_url,
+        }
 
 
 def get_video_seconds():
@@ -37,11 +41,10 @@ def get_video_seconds():
     return seconds
 
 
-
 def update_json_parts(video_id):
     video = extract_last_video()
     parts = []
-    #list the files alpabetically
+    # list the files alpabetically
     for file in sorted(os.listdir(f"./video_parts/{video_id}")):
         if file.endswith(".mp4"):
             parts.append(file)
@@ -67,7 +70,6 @@ def get_first_video_with_parts():
         for video in videos:
             if len(video["parts"]) > 0:
                 return f"./video_parts/{video['video_id']}/{video['parts'][0]}"
-    
 
 
 def get_video_file_size():
@@ -94,22 +96,22 @@ def compress_video():
     compress_video_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -vcodec libx264 -crf 23 ./edit_video/video.mp4 "
     subprocess.run(compress_video_cmd, shell=True)
 
-def write_to_queue(scrFolder, video_name, title):
-    cmd = f"mv {scrFolder} ./video_upload_queue/{video_name}"
-    #write to queue json
+
+def write_to_queue(scrFolder, video_folder_src, title):
+    cmd = f"mv {scrFolder} ./video_upload_queue/{video_folder_src}"
+    # write to queue json
     with open("queue.json", "r") as f:
         data = json.load(f)
         queue = data["queue"]
         queue.append(
-             {
-            "video_src": video_name,
-            "video_title": title,
-        }
+            {
+                "video_src": video_folder_src,
+                "video_title": title,
+            }
         )
     with open("queue.json", "w") as f:
         json.dump(data, f, indent=4)
     subprocess.run(cmd, shell=True)
-    
 
 
 def clean_up_by_id(video_id):
@@ -121,14 +123,17 @@ def clean_up_by_id(video_id):
                 video["parts"].pop(0)
     with open("video_parts.json", "w") as f:
         json.dump(data, f, indent=4)
-   
+
+
 def cut_last_three_seconds():
     cut_last_three_seconds_cmd = f"ffmpeg -i ./last_video_download/video.mp4 -ss 0 -t 00:00:03 -c copy ./edit_video/video.mp4"
     subprocess.run(cut_last_three_seconds_cmd, shell=True)
 
+
 def delete_video():
     delete_video_cmd = "rm -rf ./last_video_download/video.mp4"
     subprocess.run(delete_video_cmd, shell=True)
+
 
 def get_cutting_part(seconds, rest, segment_time=SEGEMENT, depth=1):
     base_approximation = 25 * (SEGEMENT / 60)
@@ -143,7 +148,7 @@ def get_cutting_part(seconds, rest, segment_time=SEGEMENT, depth=1):
     else:
         segment_time = segment_time + approximation
         rest -= parts * approximation
-    return get_cutting_part(seconds, rest, segment_time, depth + 1)
+    return get_cutting_part(seconds, rest, floor(segment_time), depth + 1)
 
 
 def edit_video():
@@ -151,25 +156,22 @@ def edit_video():
     title = extract_last_video()["video_title"]
     file_size = get_video_file_size()
     seconds = get_video_seconds()
-    if (seconds <= 60 and file_size > 50):
-        compress_video(video_id)
+    if seconds <= 60 and file_size > 50:
+        compress_video()
         write_to_queue("./edit_video/video.mp4", f"{video_id}_video.mp4", title)
-    elif (seconds <= 60):
-       write_to_queue("./edit_video/video.mp4", f"{video_id}_video.mp4",   title)
-    elif (seconds > 60 and seconds <= 62):
-        cut_last_three_seconds()
-        write_to_queue("./edit_video/video.mp4", f"{video_id}_video.mp4", title)
-    else:
+    elif seconds > 60:
         segment_time = get_cutting_part(seconds, seconds % SEGEMENT)
         create_folder(video_id)
         cut_video(video_id, segment_time)
         update_json_parts(video_id)
         delete_video()
-        write_to_queue(f"video_parts/{video_id}/{video_id}_video_part_0.mp4", f"{video_id}_video_part_0.mp4", title)
+        write_to_queue(
+            f"video_parts/{video_id}/{video_id}_video_part_0.mp4",
+            f"{video_id}_video_part_0.mp4",
+            title,
+        )
         clean_up_by_id(video_id)
-        
-       
-
-
-
-
+    else:
+        write_to_queue(
+            "./last_video_download/video.mp4", f"{video_id}_video.mp4", title
+        )
