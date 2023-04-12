@@ -5,7 +5,7 @@ import re
 import os
 
 
-SEGEMENT = 45
+SEGEMENT = 50
 
 
 def extract_last_video():
@@ -135,20 +135,12 @@ def delete_video():
     subprocess.run(delete_video_cmd, shell=True)
 
 
-def get_cutting_part(seconds, rest, segment_time=SEGEMENT, depth=1):
-    base_approximation = 25 * (SEGEMENT / 60)
-    approximation = base_approximation / depth
-
-    if segment_time - rest < 1 and rest <= SEGEMENT and segment_time <= SEGEMENT:
+def get_cutting_part(seconds, segment_time=SEGEMENT):
+    if seconds % segment_time <= 1 and segment_time <= SEGEMENT:
         return segment_time
-    parts = floor(seconds / segment_time)
-    if not depth % 2 == 0:
-        segment_time = segment_time - approximation
-        rest += parts * approximation
-    else:
-        segment_time = segment_time + approximation
-        rest -= parts * approximation
-    return get_cutting_part(seconds, rest, floor(segment_time), depth + 1)
+    elif segment_time <= 30:
+        return segment_time
+    return get_cutting_part(seconds=seconds, segment_time=segment_time - 1)
 
 
 def edit_video():
@@ -160,7 +152,7 @@ def edit_video():
         compress_video()
         write_to_queue("./edit_video/video.mp4", f"{video_id}_video.mp4", title)
     elif seconds > 60:
-        segment_time = get_cutting_part(seconds, seconds % SEGEMENT)
+        segment_time = get_cutting_part(seconds)
         create_folder(video_id)
         cut_video(video_id, segment_time)
         update_json_parts(video_id)

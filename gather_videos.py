@@ -1,15 +1,18 @@
 from asyncore import loop
 import json
+import random
 from dotenv import dotenv_values
 import asyncpraw
 import urllib.request
-import os
 import requests
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession
+from pytube import YouTube
+from edit_video import get_first_video_with_parts, write_to_queue
+from publish_video import clean_up
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0"
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
 }
 
 
@@ -33,6 +36,31 @@ def write_to_json(url, title):
         )
     with open("videos.json", "w") as f:
         json.dump(data, f, indent=4)
+
+
+def download_youtube(url):
+    try:
+        yt = YouTube(url)
+        stream = yt.streams.get_highest_resolution()
+        stream.download("./last_video_download/video.mp4")  # type: ignore
+    except Exception as e:
+        print(e)
+        raise Exception("Error downloading video")
+
+
+def download_dubz_videos(url):
+    try:
+        site = requests.get(url, headers=headers)
+        soup = BeautifulSoup(site.content, "html.parser")
+        video_url = soup.find("video")["src"]  # type: ignore
+        opener = urllib.request.build_opener()
+        opener.addheaders = [("User-agent", "Mozilla/5.0")]
+        urllib.request.install_opener(opener)
+        urllib.request.urlretrieve(f"{video_url}", "./last_video_download/video.mp4")
+        print("finished downloading video")
+    except Exception as e:
+        print(e)
+        raise Exception("Error downloading video")
 
 
 def download_gfycat_videos(url):
@@ -66,12 +94,9 @@ def download_streamable_videos(url):
 async def get_reddit_videos(loop):
     flair = ""
     # 50 chances to get a one of the flairs
-    import random
 
-    if random.random() < 0.5:
-        flair = "FIGHT CLIP"
-    else:
-        flair = "Highlights"
+    flairs = ["FIGHT CLIP", "Highlights", "Spoiler", "Full Fight"]
+    flair = random.choice(flairs)
 
     print(flair)
     config = dotenv_values(".env")
@@ -79,7 +104,7 @@ async def get_reddit_videos(loop):
     async with asyncpraw.Reddit(
         client_id=config["CLIENT_ID"],
         client_secret=config["CLIENT_SECRET"],
-        user_agent="wyzbits",
+        user_agent="Wyzbits",
     ) as reddit:
         subreddit = await reddit.subreddit("MMA")
         async for post in subreddit.search(
@@ -104,6 +129,30 @@ async def get_reddit_videos(loop):
                 if is_video_unused(post.url, post.title):
                     try:
                         download_streamable_videos(post.url)
+                        write_to_json(post.url, post.title)
+                        loop.stop()
+                        break
+                    except Exception as e:
+                        print(e)
+                        continue
+            if "dubz" in post.url:
+                print(post.url)
+                print(post.title)
+                if is_video_unused(post.url, post.title):
+                    try:
+                        download_streamable_videos(post.url)
+                        write_to_json(post.url, post.title)
+                        loop.stop()
+                        break
+                    except Exception as e:
+                        print(e)
+                        continue
+            if "youtube" in post.url:
+                print(post.url)
+                print(post.title)
+                if is_video_unused(post.url, post.title):
+                    try:
+                        download_youtube(post.url)
                         write_to_json(post.url, post.title)
                         loop.stop()
                         break

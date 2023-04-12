@@ -49,7 +49,7 @@ def clean_up():
 
 
 def decide_video_upload():
-    if random.random() < 0.1:
+    if random.random() < 0.3:
         video = get_first_video_with_parts()
         video_id = video["video_id"]
         video_src = video["parts"][0]
@@ -68,9 +68,6 @@ def get_first_from_queue():
         queue = data["queue"]
         if len(queue) > 0:
             video = queue[0]
-            queue.pop(0)
-            with open("queue.json", "w") as f:
-                json.dump(data, f, indent=4)
             return video
     return {}
 
@@ -84,8 +81,8 @@ def login(username, password):
         "excludeSwitches", ["enable-logging", "enable-automation"]
     )
     options.add_argument("window-size=1280,800")
-    options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
+    # options.add_argument("--headless")
+    # options.add_argument("--disable-gpu")
     # driver = webdriver.Chrome(options=options)
     driver = webdriver.Chrome(
         options=options,
@@ -118,7 +115,7 @@ def login(username, password):
             '//*[@id="application-container"]/div[2]/div[1]/div[2]/form/input[4]',
         )
         driver.execute_script("arguments[0].click();", login_button)
-        
+
         print("login successful")
         setup(driver)
     except Exception as e:
@@ -190,11 +187,13 @@ def customize_video(driver, title):
     driver.execute_script("arguments[0].click();", aria_label)
     sleep(2)
     ActionChains(driver).send_keys("", title).perform()
-    sleep(1)
+    sleep(2)
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
     for i in range(3):
         ActionChains(driver).send_keys(Keys.ENTER).perform()
         ActionChains(driver).send_keys("", "follow @warofmind_").perform()
     ActionChains(driver).send_keys(Keys.ENTER).perform()
+    sleep(1)
     ActionChains(driver).send_keys(Keys.ENTER).perform()
     ActionChains(driver).send_keys(
         "#mma#fighter#boxing#fyp#foryou#trending#ufc#body#sport#martialarts"
