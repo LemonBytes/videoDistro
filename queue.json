@@ -1,12 +1,44 @@
 {
     "queue": [
         {
-            "video_src": "BV3FcAecXL0_video_part_5.mp4",
-            "video_title": "Jon Jones vs Chael Sonnen- part 6"
+            "video_src": "32bfc4_video.mp4",
+            "video_title": "[SPOILER] Alex Pereira vs. Israel Adesanya"
         },
         {
-            "video_src": "unfortunatemammothhamster_video_part_0.mp4",
-            "video_title": "[Fight Clip] Mateo Vogel KOs Taylor Christopher"
+            "video_src": "BV3FcAecXL0_video_part_2.mp4",
+            "video_title": "Jon Jones vs Chael Sonnen - Part 3"
+        },
+        {
+            "video_src": "36s_video.mp4",
+            "video_title": "Jon Jones oblique kick."
+        },
+        {
+            "video_src": "BV3FcAecXL0_video_part_3.mp4",
+            "video_title": "Jon Jones vs Chael Sonnen - Part 4"
+        },
+        {
+            "video_src": "BV3FcAecXL0_video_part_4.mp4",
+            "video_title": "Jon Jones vs Chael Sonnen - Part 5"
+        },
+        {
+            "video_src": "BV3FcAecXL0_video_part_5.mp4",
+            "video_title": "Jon Jones vs Chael Sonnen - Part 6"
+        },
+        {
+            "video_src": "BV3FcAecXL0_video_part_6.mp4",
+            "video_title": "Jon Jones vs Chael Sonnen - Part 7"
+        },
+        {
+            "video_src": "BV3FcAecXL0_video_part_7.mp4",
+            "video_title": "Jon Jones vs Chael Sonnen - Part 8"
+        },
+        {
+            "video_src": "BV3FcAecXL0_video_part_8.mp4",
+            "video_title": "Jon Jones vs Chael Sonnen - Part 9"
+        },
+        {
+            "video_src": "BV3FcAecXL0_video_part_9.mp4",
+            "video_title": "Jon Jones vs Chael Sonnen - Part 10"
         }
     ]
 }

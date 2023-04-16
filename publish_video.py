@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from dotenv import dotenv_values
-from edit_video import write_to_queue
+from editor import write_to_queue
 from time import sleep
 
 
@@ -54,12 +54,9 @@ def decide_video_upload():
         video_id = video["video_id"]
         video_src = video["parts"][0]
         video_part_number = int(video_src.split("_")[-1].split(".")[0]) + 1
-        title = video["video_title"] + f"- part {video_part_number}"
+        title = video["video_title"] + f" - Part {video_part_number}"
         write_to_queue(f"video_parts/{video_id}/{video_src}", video_src, title)
         clean_up()
-
-
-decide_video_upload()
 
 
 def get_first_from_queue():
