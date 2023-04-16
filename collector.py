@@ -19,11 +19,23 @@ class Collector:
         self.origin = origin
         self.video = video
 
+    def __extract_video_id(self, url):
+        if "youtube" in url:
+            video_id = url.split("=")[-1]
+            print(video_id)
+        else:
+            video_id = url.split("/")[-1]
+            print(video_id)
+        return video_id    
+
     def get_video(self):
         if self.origin == "reddit":
             return self.get_reddit_video(
                 "MMA", ["FIGHT CLIP", "Highlights", "Spoiler", "Full Fight"]
             )
+        self.video.status = "error"
+        return self.video
+    
 
     def is_video_unused(self, destination_url, title):
         with open("videos.json", "r") as f:
@@ -57,5 +69,8 @@ class Collector:
                     print(post.url)
                     self.video.title = post.title
                     self.video.source_url = post.url
+                    self.video.id = self.__extract_video_id(post.url)
                     self.video.status = "pending"
                     return self.video
+        self.video.status = "error"
+        return self.video

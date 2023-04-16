@@ -1,40 +1,102 @@
 import json
 from math import floor
-import subprocess
-import re
 import os
 import ffmpeg
 from video import Video
 
 
-SEGEMENT = 55
+
 
 
 class Editor:
+    SEGEMENT = 55
+    default_output_path = "./edited_video.mp4"
+
     def __init__(self, video: Video):
         self.video = video
 
-    def edit(self):
+    def __get_meta_data(self):
+        self.video = self.__get_video_seconds()
         self.video = self.__get_video_file_size()
         return self.video
+    
+    def __get_cutting_part(self, seconds, segment_time=SEGEMENT):
+        if seconds % segment_time <= 1 and segment_time <= self.SEGEMENT:
+            return segment_time
+        elif segment_time <= 30:
+            return segment_time
+        return self.__get_cutting_part(seconds=seconds, segment_time=segment_time - 1)
+    
+    def __get_video_queue(self):
+        print("get video queue")
 
+
+    def __split_video(self):
+        input_file = self.video.download_path   
+        output_directory = f"./video_parts/{self.video.id}/"
+        split_time = self.__get_cutting_part(self.video.length)
+        segment_time = split_time
+
+        (
+            ffmpeg
+            .input(input_file)
+            .output(
+                output_directory + f"{self.video.id}_video_part_%d.mp4",
+                f="segment",
+                segment_time=segment_time,
+                vcodec="copy",
+                acodec="copy",
+                reset_timestamps=1,
+                map="0:0",
+                map="0:1",
+            )
+            .run()
+        )
+
+        
+    def __compress_video(self):
+        input_file = self.video.download_path
+        output_file = self.default_output_path
+
+        # specify output format and encoding options
+        output_options = {
+            "c:v": "libx264",    # video codec
+            "crf": "28",         # constant rate factor, lower means higher quality (18-28 recommended)
+            "preset": "medium",  # encoding speed vs. compression ratio, "medium" is a good balance
+            "c:a": "copy",       # keep original audio codec and quality
+        }
+
+        # create a FFmpeg command
+        ffmpeg_cmd = (
+            ffmpeg
+            .input(input_file)
+            .output(output_file, **output_options)
+            .overwrite_output()
+        )
+
+        # run the command
+        ffmpeg_cmd.run()
+
+
+    def edit(self):
+        video = self.__get_meta_data()
+        if video.file_size  is not None and video.length is not None:
+            if video.length < 60 and video.file_size > 50:
+                self.__compress_video()
+               
+
+       
     def __get_video_seconds(self):
         try:
-            input = ffmpeg.input("./last_video_download/video.mp4")
-
-            cmd = "ffmpeg -i ./last_video_download/video.mp4 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//"
-            output = subprocess.check_output(cmd, shell=True)
-            output = output.decode("utf-8").strip()
-            print(output)
-            seconds = 0
-            for time in output.split(":"):
-                if not time:
-                    continue
-                seconds = seconds * 60 + float(time)
-            return seconds
-        except (subprocess.CalledProcessError, ValueError) as e:
-            print(f"Error getting video length: {e}")
-            return 0
+            probe = ffmpeg.probe("./last_video_download/video.mp4")
+            video_info = next(stream for stream in probe['streams'] if stream['codec_type'] == 'video')
+            duration = float(video_info['duration'])
+            self.video.length = duration
+            return self.video
+        except StopIteration:
+            self.video.status = "error"
+            self.video.length = 0
+            return self.video
 
     def __get_video_file_size(self):
         output = os.path.getsize("./last_video_download/video.mp4")
@@ -43,6 +105,9 @@ class Editor:
         self.video.status = "done"
         print(f"Video file size: {mega_bytes} MB")
         return self.video
+    
+
+
 
 
 # def extract_last_video():

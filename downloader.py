@@ -1,4 +1,4 @@
-import urllib
+import urllib.request
 from bs4 import BeautifulSoup
 import requests
 from video import Video
@@ -11,29 +11,41 @@ class Downloader:
     }
     default_download_path = "./last_video_download/video.mp4"
 
-    def __init__(self, video: Video) -> None:
+    def __init__(self, video: Video):
         self.video = video
 
     def download(self) -> Video:
+        if  self.video.source_url is None:
+          self.video.status = "error"  
+          return self.video
         if "youtu.be" in self.video.source_url:
-            self.__download_from_youtube()
+              self.__download_from_youtube()
+              self.video.status = "downloaded"
         elif "dubz" in self.video.source_url:
-            self.__download_dubz_videos()
+              self.__download_dubz_videos()
+              self.video.status = "downloaded"
         elif "gfycat" in self.video.source_url:
-            self.__download_gfycat_videos()
-        self.video.status = "downloaded"
-        return self.video
+              self.__download_gfycat_videos()
+              self.video.status = "downloaded"
+        self.video.download_path = self.default_download_path      
+        return self.video      
 
     def __download_from_youtube(self):
+        if self.video.source_url is None:
+                self.video.status = "error"
+                raise Exception("No video source url")
         try:
-            yt = YouTube(self.video.source_url)
+            yt = YouTube(self.video.source_url) 
             stream = yt.streams.get_highest_resolution()
             stream.download(self.default_download_path)  # type: ignore
         except Exception as e:
-            print(e)
+            self.video.status = "error"
             raise Exception("Error downloading video")
 
     def __download_dubz_videos(self):
+        if self.video.source_url is None:
+                self.video.status = "error"
+                raise Exception("No video source url")
         try:
             site = requests.get(self.video.source_url, headers=self.headers)
             print(site.content)
@@ -47,9 +59,13 @@ class Downloader:
             print("finished downloading video")
         except Exception as e:
             print(e)
+            self.video.status = "error"
             raise Exception("Error downloading video")
 
     def __download_gfycat_videos(self):
+        if self.video.source_url is None:
+            self.video.status = "error"
+            raise Exception("No video source url")
         try:
             site = requests.get(self.video.source_url, headers=self.headers)
             soup = BeautifulSoup(site.content, "html.parser")
@@ -58,4 +74,5 @@ class Downloader:
             print("finished downloading video")
         except Exception as e:
             print(e)
+            self.video.status = "error"
             raise Exception("Error downloading video")

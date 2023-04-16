@@ -34,5 +34,8 @@ class VideoFactory:
                             print(video.status)
                         elif video.status == "downloaded":
                             editor = Editor(video=video)
-                            parts = editor.edit()
-                        self.limit = self.limit + 1
+                            video = editor.edit ()
+                            self.limit = self.limit + 1
+                            break
+            break    
+        
