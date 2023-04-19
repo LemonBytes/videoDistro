@@ -27,7 +27,6 @@ class Downloader:
         elif "gfycat" in self.video.source_url:
               self.__download_gfycat_videos()
               self.video.status = "downloaded"
-        self.video.download_path = self.default_download_path      
         return self.video      
 
     def __download_from_youtube(self):

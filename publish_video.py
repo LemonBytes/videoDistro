@@ -11,7 +11,6 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from dotenv import dotenv_values
-from editor import write_to_queue
 from time import sleep
 
 

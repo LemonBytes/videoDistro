@@ -1,3 +1,5 @@
+import json
+import os
 from collector import Collector
 from video import Video
 from downloader import Downloader
@@ -11,31 +13,69 @@ class VideoFactory:
         self.limit = 0
         self.video_list = []
 
+
+    def __get_next_upload_part(self) -> int:
+        all_folders = os.listdir("./video_upload_queue")
+        last_folder_by_number = 0
+        for folder in all_folders:
+            folder_number = folder.split("_")[0]
+            if int(folder_number) > last_folder_by_number:
+                last_folder_by_number = int(folder_number)
+        return last_folder_by_number + 1         
+
+    def __create_folder(self, folder_name: str) -> None:
+        try:
+            os.mkdir(f"./video_upload_queue/{folder_name}")
+        except Exception as e:
+            print(e)
+
+
+    def _update_video_json(self, video: Video) -> None:
+        with open("./video_upload_queue/videos.json", "r") as f:
+            data = json.load(f)
+            videos = data["videos"]
+       # check if the video already exists in the json file
+        for i, v in enumerate(videos):
+            if v["id"] == video.id:
+                videos[i] = video.__dict__
+                break
+        else:
+            videos.append(video.__dict__)
+
+        with open("./video_upload_queue/videos.json", "w") as f:
+            json.dump(data, f, indent=4)        
+
+
+        
+
     def start(self) -> None:
         while self.limit <= self.max_limit:
             if len(self.video_list) == 0:
                 self.video_list.append(Video())
-
-            # gibt es videos in der queue?
-            # geh durch die queue und lade pro video den nächsten part hoch
-
             for video in self.video_list:
-                print("Iterator")
                 if video and isinstance(video, Video):
                     while video.status != "error" or video.status != "done":
                         if video.status == "init":
-                            print("EL COLECTOR")
                             collector = Collector(origin="reddit", video=video)
                             video = collector.get_video()
+                            self._update_video_json(video)
                             print(video.status)
                         elif video.status == "pending":
                             downloader = Downloader(video=video)
                             video = downloader.download()
                             print(video.status)
                         elif video.status == "downloaded":
-                            editor = Editor(video=video)
-                            video = editor.edit ()
+                            ## TODO: autogenerate next upload number and current video id as class variables
+                            next_upload_number = self.__get_next_upload_part()
+                            current_video_id = video.id
+                            self.__create_folder(f"{next_upload_number}_{current_video_id}")
+                            editor = Editor(next_upload_number=next_upload_number, video=video)
+                            video = editor.edit()
+                            self._update_video_json(video)
+                            print(video.status)
                             self.limit = self.limit + 1
                             break
-            break    
-        
+                        elif video.status == "edited":
+                         
+                            break    
+            break

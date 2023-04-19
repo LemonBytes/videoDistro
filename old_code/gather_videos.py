@@ -8,7 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession
 from pytube import YouTube
-from edit_video import get_first_video_with_parts, write_to_queue
+from old_code.edit_video import get_first_video_with_parts, write_to_queue
 from publish_video import clean_up
 
 headers = {
