@@ -21,13 +21,15 @@ class Publisher:
     config = dotenv_values(".env")
     username = config["PUBLER_ID"]
     password = config["PUBLER_PASSWORD"]
+    video_title = None
 
-
-    def __init__(self, video:Video) -> None:
+    def __init__(self, video:Video, next_upload_number: int) -> None:
         self.video = video
+        self.next_upload_number = next_upload_number
+        self.__init_driver()
 
     def __init_driver(self):
-        if self.driver is None:
+        if self.driver is not None:
             options = Options()
             options.add_argument("--no-sandbox")
             options.add_argument("--log-level=3")
@@ -43,9 +45,24 @@ class Publisher:
                 options=options,
                 executable_path="./chromeself.driver",
             )
-            self.__init_driver()
-        else:
-            return 0
+       
+    
+    def __video_path(self):
+        #get the first folder in the video_upload_queue
+        video_path = os.listdir("./video_upload_queue")[0]
+        # get the first video in the folder
+        video_path = os.listdir(f"./video_upload_queue/{video_path}")[0]
+        return video_path
+        
+        
+    def __get_video_title(self, video_id):
+        with open("vdieos.json", "r") as f:
+            data = json.load(f)
+            videos = data["video_parts"]
+            for video in videos:
+                if video["video_id"] == self.video.id:
+                    return video["video_title"]
+
 
     def __login(self):
         if self.driver is None: 
@@ -80,5 +97,82 @@ class Publisher:
             print(e)
             self.driver.quit()
             exit(1)       
+
+
+
+        def __setup(self):
+            banner_button =   self.driver.find_element(By.XPATH, "/html/body/div[2]/div/div/button")
+            sleep(1)
+            self.driver.execute_script("arguments[0].click();", banner_button)
+            sleep(1)
+            account_number = 1
+            while account_number <= 3:
+                sleep(1)
+                account_button =   self.driver.find_element(
+                    By.XPATH,
+                    f"/html/body/div/div[2]/div/main/div/main/div[1]/div[2]/div[{account_number}]/div",
+                )
+                sleep(1)
+                self.driver.execute_script("arguments[0].click();", account_button)
+                sleep(1)
+                account_number += 1
+            print("setup successful")
+            sleep(2)
             
-           
+       
+        def __upload_video(self):
+            upload_video_button = self.driver.find_element(
+                By.XPATH,
+                "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input",
+            )
+            sleep(1)
+            if self.upload_type == "queue":
+                video_src = self.__video_path()
+            else:    
+                video_src = f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/{self.video.id}_video.mp4" 
+            upload_video_button.send_keys(os.path.abspath(f"./video_upload_queue/{video_src}"))
+            self.driver.implicitly_wait(5)
+            print("video upload successful")
+                
+
+
+        def __customize_instgram_upload(self, title):
+            customize_button = self.driver.find_element(
+                By.XPATH,
+                "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/footer/div[1]/div/div/span[1]/span/span/i",
+            )
+            self.driver.execute_script("arguments[0].click();", customize_button)
+            sleep(3)
+            ########## INSTAGRAM ##########
+            fake_label = self.driver.find_element(
+                By.XPATH,
+                "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div",
+            )
+            self.driver.execute_script("arguments[0].click();", fake_label)
+            sleep(1)
+            reel_button = self.driver.find_element(
+                By.XPATH,
+                "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div[1]/div[3]",
+            )
+            self.driver.execute_script("arguments[0].click();", reel_button)
+            sleep(1)
+            aria_label = self.driver.find_element(
+                By.XPATH,
+                "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div/div[1]/div[1]/div/div/div",
+            )
+            self.driver.execute_script("arguments[0].click();", aria_label)
+            sleep(2)
+            ActionChains(self.driver).send_keys("", title).perform()
+            sleep(2)
+            ActionChains(self.driver).send_keys(Keys.ENTER).perform()
+            for i in range(3):
+                ActionChains(self.driver).send_keys(Keys.ENTER).perform()
+                ActionChains(self.driver).send_keys("", "follow @warofmind_").perform()
+            ActionChains(self.driver).send_keys(Keys.ENTER).perform()
+            sleep(1)
+            ActionChains(self.driver).send_keys(Keys.ENTER).perform()
+            ActionChains(self.driver).send_keys(
+                "#mma#fighter#boxing#fyp#foryou#trending#ufc#body#sport#martialarts"
+            ).perform()
+
+            sleep(2)

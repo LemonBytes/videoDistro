@@ -8,20 +8,23 @@ import asyncio
 
 
 class VideoFactory:
+    next_upload_number = 0
+
     def __init__(self, max_limit=1) -> None:
         self.max_limit = max_limit
         self.limit = 0
         self.video_list = []
 
 
-    def __get_next_upload_part(self) -> int:
+    def __get_next_upload_part(self):
         all_folders = os.listdir("./video_upload_queue")
-        last_folder_by_number = 0
+        next_folder_by_number = 0
         for folder in all_folders:
             folder_number = folder.split("_")[0]
-            if int(folder_number) > last_folder_by_number:
-                last_folder_by_number = int(folder_number)
-        return last_folder_by_number + 1         
+            if int(folder_number) > next_folder_by_number:
+                next_folder_by_number = int(folder_number)
+        self.next_upload_number = next_folder_by_number + 1 
+
 
     def __create_folder(self, folder_name: str) -> None:
         try:
@@ -55,6 +58,7 @@ class VideoFactory:
             for video in self.video_list:
                 if video and isinstance(video, Video):
                     while video.status != "error" or video.status != "done":
+                        self.__get_next_upload_part()
                         if video.status == "init":
                             collector = Collector(origin="reddit", video=video)
                             video = collector.get_video()
@@ -66,16 +70,14 @@ class VideoFactory:
                             print(video.status)
                         elif video.status == "downloaded":
                             ## TODO: autogenerate next upload number and current video id as class variables
-                            next_upload_number = self.__get_next_upload_part()
-                            current_video_id = video.id
-                            self.__create_folder(f"{next_upload_number}_{current_video_id}")
-                            editor = Editor(next_upload_number=next_upload_number, video=video)
+                            self.__create_folder(f"{self.next_upload_number}_{video.id}")
+                            editor = Editor(next_upload_number=self.next_upload_number, video=video)
                             video = editor.edit()
                             self._update_video_json(video)
                             print(video.status)
                             self.limit = self.limit + 1
                             break
                         elif video.status == "edited":
-                         
+                            
                             break    
             break
