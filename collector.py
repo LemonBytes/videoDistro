@@ -1,5 +1,6 @@
 import json
 import random
+import time
 from dotenv import dotenv_values
 
 # import asyncpraw
@@ -19,35 +20,42 @@ class Collector:
         self.origin = origin
         self.video = video
 
+    def get_video(self) -> Video:
+        if self.origin == "reddit":
+            video = self.__get_reddit_video(
+                "MMA",
+                [
+                    "Full Fight",
+                    "FIGHT CLIP",
+                    "Highlights",
+                ],
+            )
+            return video
+        else:
+            self.video.status = "error"
+            return self.video
+
     def __extract_video_id(self, url):
+        print(f"Extracting video id from url:{url}")
         if "youtube" in url:
             video_id = url.split("=")[-1]
-            print(video_id)
+            print(f"youtube - video_id:{video_id}")
         else:
             video_id = url.split("/")[-1]
-            print(video_id)
-        return video_id    
+            print(f"other - video_id:{video_id}")
+        return video_id
 
-    def get_video(self):
-        if self.origin == "reddit":
-            return self.get_reddit_video(
-                "MMA", ["FIGHT CLIP", "Highlights", "Spoiler", "Full Fight"]
-            )
-        self.video.status = "error"
-        return self.video
-    
-
-    def is_video_unused(self, destination_url, title):
+    def __is_video_unused(self, destination_url, title):
         with open("videos.json", "r") as f:
             data = json.load(f)
             videos = data["videos"]
-            if (destination_url in [video["video_url"] for video in videos]) or (
-                title in [video["video_title"] for video in videos]
-            ):
-                return False
+            for video in videos:
+                id = self.__extract_video_id(destination_url)
+                if id == video["id"]:
+                    return False
         return True
 
-    def get_reddit_video(self, subreddit_name, flairs) -> Video:
+    def __get_reddit_video(self, subreddit_name, flairs) -> Video:
         chosenflair = random.choice(flairs)
         print(f"Chosen flair: {chosenflair}")
         config = dotenv_values(".env")
@@ -61,10 +69,13 @@ class Collector:
             "flair:" + chosenflair, syntax="lucene", limit=None
         ):
             if (
-                post.url
-                and ("gfycat" or "streamable" or "dubz" or "youtu.be") in post.url
+                "youtube"
+                or "youtu.be"
+                or "dubz.co"
+                or "gfycat"
+                or "streamable" in post.url
             ):
-                if self.is_video_unused(post.url, post.title):
+                if self.__is_video_unused(post.url, post.title):
                     print("Found unused video")
                     print(post.url)
                     self.video.title = post.title
@@ -72,5 +83,6 @@ class Collector:
                     self.video.id = self.__extract_video_id(post.url)
                     self.video.status = "pending"
                     return self.video
+
         self.video.status = "error"
         return self.video

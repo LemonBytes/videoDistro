@@ -15,7 +15,6 @@ class VideoFactory:
         self.limit = 0
         self.video_list = []
 
-
     def __get_next_upload_part(self):
         all_folders = os.listdir("./video_upload_queue")
         next_folder_by_number = 0
@@ -23,8 +22,7 @@ class VideoFactory:
             folder_number = folder.split("_")[0]
             if int(folder_number) > next_folder_by_number:
                 next_folder_by_number = int(folder_number)
-        self.next_upload_number = next_folder_by_number + 1 
-
+        self.next_upload_number = next_folder_by_number + 1
 
     def __create_folder(self, folder_name: str) -> None:
         try:
@@ -32,24 +30,24 @@ class VideoFactory:
         except Exception as e:
             print(e)
 
-
     def _update_video_json(self, video: Video) -> None:
-        with open("./video_upload_queue/videos.json", "r") as f:
+        with open("./videos.json", "r") as f:
             data = json.load(f)
             videos = data["videos"]
-       # check if the video already exists in the json file
-        for i, v in enumerate(videos):
-            if v["id"] == video.id:
-                videos[i] = video.__dict__
-                break
-        else:
+
+        if len(videos) == 0:
             videos.append(video.__dict__)
 
-        with open("./video_upload_queue/videos.json", "w") as f:
-            json.dump(data, f, indent=4)        
+        for json_video in videos:
+            if json_video["id"] == video.id:
+                json_video = video.__dict__
+                break
+            else:
+                videos.append(video.__dict__)
+                break
 
-
-        
+        with open("./videos.json", "w") as f:
+            json.dump(data, f, indent=4)
 
     def start(self) -> None:
         while self.limit <= self.max_limit:
@@ -63,21 +61,23 @@ class VideoFactory:
                             collector = Collector(origin="reddit", video=video)
                             video = collector.get_video()
                             self._update_video_json(video)
-                            print(video.status)
+                            break
                         elif video.status == "pending":
                             downloader = Downloader(video=video)
                             video = downloader.download()
                             print(video.status)
                         elif video.status == "downloaded":
-                            ## TODO: autogenerate next upload number and current video id as class variables
-                            self.__create_folder(f"{self.next_upload_number}_{video.id}")
-                            editor = Editor(next_upload_number=self.next_upload_number, video=video)
+                            self.__create_folder(
+                                f"{self.next_upload_number}_{video.id}"
+                            )
+                            editor = Editor(
+                                next_upload_number=self.next_upload_number, video=video
+                            )
                             video = editor.edit()
                             self._update_video_json(video)
                             print(video.status)
                             self.limit = self.limit + 1
                             break
-                        elif video.status == "edited":
-                            
-                            break    
+                        elif video.status == "edited" or video.status == "":
+                            break
             break

@@ -10,8 +10,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
-from dotenv import dotenv_values
-from time import sleep
 
 
 def get_first_video_with_parts():
@@ -48,14 +46,17 @@ def clean_up():
 
 
 def decide_video_upload():
-    if random.random() < 0.3:
+    if random.random() < 0.1:
         video = get_first_video_with_parts()
         video_id = video["video_id"]
         video_src = video["parts"][0]
         video_part_number = int(video_src.split("_")[-1].split(".")[0]) + 1
-        title = video["video_title"] + f" - Part {video_part_number}"
+        title = video["video_title"] + f"- part {video_part_number}"
         write_to_queue(f"video_parts/{video_id}/{video_src}", video_src, title)
         clean_up()
+
+
+decide_video_upload()
 
 
 def get_first_from_queue():
@@ -64,6 +65,9 @@ def get_first_from_queue():
         queue = data["queue"]
         if len(queue) > 0:
             video = queue[0]
+            queue.pop(0)
+            with open("queue.json", "w") as f:
+                json.dump(data, f, indent=4)
             return video
     return {}
 
@@ -77,8 +81,8 @@ def login(username, password):
         "excludeSwitches", ["enable-logging", "enable-automation"]
     )
     options.add_argument("window-size=1280,800")
-    # options.add_argument("--headless")
-    # options.add_argument("--disable-gpu")
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
     # driver = webdriver.Chrome(options=options)
     driver = webdriver.Chrome(
         options=options,
@@ -183,13 +187,11 @@ def customize_video(driver, title):
     driver.execute_script("arguments[0].click();", aria_label)
     sleep(2)
     ActionChains(driver).send_keys("", title).perform()
-    sleep(2)
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
+    sleep(1)
     for i in range(3):
         ActionChains(driver).send_keys(Keys.ENTER).perform()
         ActionChains(driver).send_keys("", "follow @warofmind_").perform()
     ActionChains(driver).send_keys(Keys.ENTER).perform()
-    sleep(1)
     ActionChains(driver).send_keys(Keys.ENTER).perform()
     ActionChains(driver).send_keys(
         "#mma#fighter#boxing#fyp#foryou#trending#ufc#body#sport#martialarts"
