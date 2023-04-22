@@ -36,13 +36,12 @@ class Collector:
             return self.video
 
     def __extract_video_id(self, url):
-        print(f"Extracting video id from url:{url}")
         if "youtube" in url:
             video_id = url.split("=")[-1]
-            print(f"youtube - video_id:{video_id}")
+            if(video_id == "share"):
+                video_id = url.split("/")[-2]
         else:
             video_id = url.split("/")[-1]
-            print(f"other - video_id:{video_id}")
         return video_id
 
     def __is_video_unused(self, destination_url, title):
@@ -69,15 +68,16 @@ class Collector:
             "flair:" + chosenflair, syntax="lucene", limit=None
         ):
             if (
-                "youtube"
+                "youtube.com"
                 or "youtu.be"
                 or "dubz.co"
-                or "gfycat"
-                or "streamable" in post.url
+                or "gfycat.cm"
+                or "streamable.com" 
+                or "streamin.one"
+                in post.url
             ):
                 if self.__is_video_unused(post.url, post.title):
                     print("Found unused video")
-                    print(post.url)
                     self.video.title = post.title
                     self.video.source_url = post.url
                     self.video.id = self.__extract_video_id(post.url)

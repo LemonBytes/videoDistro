@@ -38,14 +38,18 @@ class VideoFactory:
         if len(videos) == 0:
             videos.append(video.__dict__)
 
-        for json_video in videos:
-            if json_video["id"] == video.id:
-                json_video = video.__dict__
-                break
-            else:
-                videos.append(video.__dict__)
-                break
 
+        video_exists = False
+        index = 0
+        for i, v in enumerate(videos):
+            if v["id"] == video.id:
+                video_exists = True
+                index = i
+                break
+        if video_exists:
+            videos[index] = video.__dict__
+        else:
+            videos.append(video.__dict__)
         with open("./videos.json", "w") as f:
             json.dump(data, f, indent=4)
 
@@ -61,12 +65,13 @@ class VideoFactory:
                             collector = Collector(origin="reddit", video=video)
                             video = collector.get_video()
                             self._update_video_json(video)
-                            break
                         elif video.status == "pending":
+                            print("3")
                             downloader = Downloader(video=video)
                             video = downloader.download()
-                            print(video.status)
+                            self._update_video_json(video)
                         elif video.status == "downloaded":
+                            print("5")
                             self.__create_folder(
                                 f"{self.next_upload_number}_{video.id}"
                             )
@@ -75,9 +80,8 @@ class VideoFactory:
                             )
                             video = editor.edit()
                             self._update_video_json(video)
-                            print(video.status)
                             self.limit = self.limit + 1
                             break
-                        elif video.status == "edited" or video.status == "":
+                        elif video.status == "edited":
                             break
             break
