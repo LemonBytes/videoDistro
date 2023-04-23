@@ -25,7 +25,7 @@ class Collector:
             video = self.__get_reddit_video(
                 "MMA",
                 [
-                    "Full Fight",
+                    #"Full Fight",
                     "FIGHT CLIP",
                     "Highlights",
                 ],

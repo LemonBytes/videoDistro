@@ -44,11 +44,11 @@ class Downloader:
             stream.download(self.default_download_path, "video.mp4")  # type: ignore
             print("finished downloading video")
         except Exception as e:
-            self.__download_from_youtube(counter=counter+1)
             if counter > 10:
                 self.video.status = "error"
                 print(e)
                 raise Exception("Error downloading video")
+            self.__download_from_youtube(counter=counter+1)
 
 
     def __download_dubz_videos(self):

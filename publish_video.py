@@ -2,6 +2,7 @@ import json
 import os
 import random
 import subprocess
+from time import sleep
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
@@ -52,7 +53,7 @@ def decide_video_upload():
         video_src = video["parts"][0]
         video_part_number = int(video_src.split("_")[-1].split(".")[0]) + 1
         title = video["video_title"] + f"- part {video_part_number}"
-        write_to_queue(f"video_parts/{video_id}/{video_src}", video_src, title)
+
         clean_up()
 
 
@@ -83,7 +84,7 @@ def login(username, password):
     options.add_argument("window-size=1280,800")
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
-    # driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(options=options)
     driver = webdriver.Chrome(
         options=options,
         executable_path="./chromedriver",
@@ -224,11 +225,3 @@ def customize_video(driver, title):
     )
     driver.execute_script("arguments[0].click();", publish_button)
     sleep(20)
-    print("video publish  successful")
-    remove_from_queue()
-    driver.quit()
-
-
-def publish_video():
-    config = dotenv_values(".env")
-    login(config["PUBLER_ID"], config["PUBLER_PASSWORD"])

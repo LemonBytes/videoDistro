@@ -107,7 +107,7 @@ class Editor:
         #list directory alphhabetic
 
         self.video.video_parts = sorted(os.listdir(output_directory))
-        self.video.status = "edited"
+        self.video.status = "queued"
         self.video.queue_source = output_directory
         return self.video
     

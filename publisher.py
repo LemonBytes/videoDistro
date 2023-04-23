@@ -22,13 +22,13 @@ class Publisher:
     password = config["PUBLER_PASSWORD"]
     video_title = None
 
-    def __init__(self, video: Video, next_upload_number: int) -> None:
+    def __init__(self, video: Video) -> None:
         self.video = video
-        self.next_upload_number = next_upload_number
         self.__init_driver()
 
     def __init_driver(self):
-        if self.driver is not None:
+        if self.driver is None:
+            print("Driver initialized...")
             options = Options()
             options.add_argument("--no-sandbox")
             options.add_argument("--log-level=3")
@@ -37,37 +37,43 @@ class Publisher:
                 "excludeSwitches", ["enable-logging", "enable-automation"]
             )
             options.add_argument("window-size=1280,800")
-            # options.add_argument("--headless")
-            # options.add_argument("--disable-gpu")
-            # self.driver = webself.driver.Chrome(options=options)
-            self.driver = self.driver.Chrome(
+            #options.add_argument("--headless")
+            #options.add_argument("--disable-gpu")
+            self.driver = webdriver.Chrome(
                 options=options,
-                executable_path="./chromeself.driver",
+                executable_path="./chromedriver",
             )
 
+
+          
     def publish(self):
-            self.__login()
-            self.__setup()
-            self.__upload_video()
-            self.__customize_instgram_upload()
-            self.__customize_youtube_upload()
+        self.__login()
+        self.__setup()
+        self.__upload_video()
+        self.__customize_instgram_upload()
+        self.__customize_youtube_upload()
+        self.__update_status()
+        return self.video
+
+            
+
+    def __update_status(self):
+        if len(self.video.video_parts) <= 1:
+            self.video.status = "done"    
+         
         
 
-    def __next_video_path_from_queue(self) -> str:
-        # get the first folder in the video_upload_queue
-        video_path = os.listdir("./video_upload_queue")[0]
-        # get the first video in the folder
-        video_path = os.listdir(f"./video_upload_queue/{video_path}")[0]
-        return video_path
+    def __next_video_path(self) -> str:
+        if self.video.queue_source is None:
+            raise Exception("Queue source is not set")
+        try:
+            video_paths = os.listdir(self.video.queue_source)
+            return os.path.join(self.video.queue_source, video_paths[0])
+        except Exception as e:
+            print(e)
+            return ""
 
-    def __get_video_title(self, video_id):
-        with open("videos.json", "r") as f:
-            data = json.load(f)
-            videos = data["video_parts"]
-            for video in videos:
-                if video["video_id"] == self.video.id:
-                    return video["video_title"]
-
+       
     def __login(self):
         if self.driver is None:
             return 0
@@ -102,6 +108,7 @@ class Publisher:
             self.driver.quit()
             exit(1)
 
+
     def __setup(self):
         if self.driver is None:
             return 0
@@ -133,18 +140,10 @@ class Publisher:
             "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input",
         )
         sleep(1)
-        if self.upload_type == "queue":
-            video_src = self.__video_path()
-            video_id = video_src.split("_")[0]
-            self.video_title = self.__get_video_title(video_id)
-        else:
-            video_src = f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/{self.video.id}_video.mp4"
-            self.video_title = self.video.title
-        upload_video_button.send_keys(
-            os.path.abspath(f"./video_upload_queue/{video_src}")
-        )
+        upload_video_button.send_keys(os.path.abspath(self.__next_video_path()))
         self.driver.implicitly_wait(5)
         print("video upload successful")
+
     
     def __customize_instgram_upload(self):
         if self.driver is None:

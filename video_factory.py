@@ -1,6 +1,8 @@
 import json
 import os
+import random
 from collector import Collector
+from publisher import Publisher
 from video import Video
 from downloader import Downloader
 from editor import Editor
@@ -38,7 +40,6 @@ class VideoFactory:
         if len(videos) == 0:
             videos.append(video.__dict__)
 
-
         video_exists = False
         index = 0
         for i, v in enumerate(videos):
@@ -53,13 +54,47 @@ class VideoFactory:
         with open("./videos.json", "w") as f:
             json.dump(data, f, indent=4)
 
+    def  __get_video_from_queue(self) -> Video:
+        first_folder = os.listdir("./video_upload_queue")[0]
+        video_id = first_folder.split("_")[1]
+        with open("./videos.json", "r") as f:
+            data = json.load(f)
+            videos = data["videos"]
+        for video in videos:
+            if video["id"] == video_id:
+                return Video(**video)
+        return Video()
+                
+
+
+    def __clean_up_video(self, video: Video) -> None:
+        if video.queue_source is None:
+            raise Exception("Queue source is not set")
+        video_paths = os.listdir(video.queue_source)
+        video_to_delete = os.path.join(video.queue_source, video_paths[0])
+        os.remove(video_to_delete)
+        video_path_after_clean_up = os.listdir(video.queue_source)
+        if len(video_path_after_clean_up) == 0:
+            os.rmdir(video.queue_source)
+        if (len(video.video_parts) > 0):
+            video.video_parts.pop(0)
+            self._update_video_json(video)
+            
+
+
     def start(self) -> None:
         while self.limit <= self.max_limit:
             if len(self.video_list) == 0:
-                self.video_list.append(Video())
+                random_number = random.randrange(1, 3)
+                if random_number == 2:
+                    print("new video")
+                    self.video_list.append(Video())
+                else:
+                    print("queue")
+                    self.video_list.append(self.__get_video_from_queue())    
             for video in self.video_list:
                 if video and isinstance(video, Video):
-                    while video.status != "error" or video.status != "done":
+                    while video.status != "error" or video.status != "done" or video.status != "queued":
                         self.__get_next_upload_part()
                         if video.status == "init":
                             collector = Collector(origin="reddit", video=video)
@@ -80,8 +115,13 @@ class VideoFactory:
                             )
                             video = editor.edit()
                             self._update_video_json(video)
-                            self.limit = self.limit + 1
                             break
-                        elif video.status == "edited":
+                        elif video.status == "edited" or video.status == "queued":
+                            publisher = Publisher(video=video)
+                            video = publisher.publish()
+                            self._update_video_json(video)
+                        elif video.status == "done" or video.status == "queued":
+                            self.__clean_up_video(video)
+                            self.limit += 1
                             break
             break
