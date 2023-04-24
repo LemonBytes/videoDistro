@@ -31,24 +31,6 @@
             "video_parts": []
         },
         {
-            "id": "6U6yaWLTmEM",
-            "title": "Sergei Pavlovich | UFC Resume - 2022",
-            "source_url": "https://youtu.be/6U6yaWLTmEM",
-            "file_size": 27.762907028198242,
-            "length": 207.273733,
-            "queue_source": "./video_upload_queue/2_6U6yaWLTmEM/",
-            "status": "edited",
-            "video_parts": [
-                "6U6yaWLTmEM_video_part_0.mp4",
-                "6U6yaWLTmEM_video_part_1.mp4",
-                "6U6yaWLTmEM_video_part_2.mp4",
-                "6U6yaWLTmEM_video_part_3.mp4",
-                "6U6yaWLTmEM_video_part_4.mp4",
-                "6U6yaWLTmEM_video_part_5.mp4",
-                "6U6yaWLTmEM_video_part_6.mp4"
-            ]
-        },
-        {
             "id": "BV3FcAecXL0",
             "title": "Jon Jones vs Chael Sonnen",
             "source_url": "https://youtu.be/BV3FcAecXL0",
@@ -57,7 +39,6 @@
             "queue_source": "./video_upload_queue/0_BV3FcAecXL0/",
             "status": "queued",
             "video_parts": [
-                "BV3FcAecXL0_video_part_2.mp4",
                 "BV3FcAecXL0_video_part_3.mp4",
                 "BV3FcAecXL0_video_part_4.mp4",
                 "BV3FcAecXL0_video_part_5.mp4",
@@ -89,43 +70,42 @@
             "video_parts": []
         },
         {
-            "id": "youtube.com",
-            "title": "Hitting an Unconscious Opponent in MMA: Super Necessary or Super Unneces...",
-            "source_url": "https://youtube.com/watch?v=5Ch4mB0ZZ7A&feature=share",
-            "file_size": null,
-            "length": null,
-            "queue_source": null,
-            "status": "downloaded",
-            "video_parts": []
-        },
-        {
-            "id": "7545641812179151063",
-            "title": "Michael Chandler almost nukes Eddie Alvarez in the first 10 seconds of their first fight before Alvarez clips him with a right hand. Chandler is scheduled to fight Dustin Poirier in 8 days at UFC 281.",
-            "source_url": "https://streamable.com/cn1n4e",
-            "file_size": null,
-            "length": null,
-            "queue_source": null,
-            "status": "pending",
-            "video_parts": []
-        },
-        {
-            "id": "3694327407186290612",
-            "title": "Rafael Fiziev fakes a knee to clip Rafael Dos Santos with a left hook claiming his title as the best Rafael in the UFC",
-            "source_url": "https://gfycat.com/perfectadorablecentipede",
-            "file_size": null,
-            "length": null,
-            "queue_source": null,
-            "status": "pending",
-            "video_parts": []
-        },
-        {
-            "id": "4987380257504615379",
+            "id": "8ab17f5d-0a7f-5281-98cc-de3bf4e4a23f",
             "title": "Rafael Fiziev fakes a knee to clip Rafael Dos Santos with a left hook claiming his title as the best Rafael in the UFC",
             "source_url": "https://gfycat.com/perfectadorablecentipede",
             "file_size": 2.7016372680664062,
             "length": 13.000065,
-            "queue_source": "./video_upload_queue/3_4987380257504615379/4987380257504615379_video.mp4",
+            "queue_source": "./video_upload_queue/3_8ab17f5d-0a7f-5281-98cc-de3bf4e4a23f/",
             "status": "edited",
+            "video_parts": [
+                "8ab17f5d-0a7f-5281-98cc-de3bf4e4a23f_video.mp4"
+            ]
+        },
+        {
+            "id": "1a8a311c-92e1-5de9-a860-211302372497",
+            "title": "Sergei Pavlovich | UFC Resume - 2022",
+            "source_url": "https://youtu.be/6U6yaWLTmEM",
+            "file_size": 27.762907028198242,
+            "length": 207.273733,
+            "queue_source": "./video_upload_queue/4_1a8a311c-92e1-5de9-a860-211302372497/",
+            "status": "queued",
+            "video_parts": [
+                "1a8a311c-92e1-5de9-a860-211302372497_video_part_1.mp4",
+                "1a8a311c-92e1-5de9-a860-211302372497_video_part_2.mp4",
+                "1a8a311c-92e1-5de9-a860-211302372497_video_part_3.mp4",
+                "1a8a311c-92e1-5de9-a860-211302372497_video_part_4.mp4",
+                "1a8a311c-92e1-5de9-a860-211302372497_video_part_5.mp4",
+                "1a8a311c-92e1-5de9-a860-211302372497_video_part_6.mp4"
+            ]
+        },
+        {
+            "id": "09b70dd1-b888-5132-9377-c0af9df9bbe8",
+            "title": "Demetrious Johnson taking down his opponents",
+            "source_url": "https://gfycat.com/pleasingtastyjackal",
+            "file_size": 8.239869117736816,
+            "length": 52.533333,
+            "queue_source": "./video_upload_queue/5_09b70dd1-b888-5132-9377-c0af9df9bbe8/",
+            "status": "queued",
             "video_parts": []
         }
     ]

@@ -43,7 +43,6 @@ class Editor:
             return self.video
         except Exception as e:
             self.video.status = "error"
-            self.video.length = 0
             return self.video
 
     def __get_video_file_size(self) -> Video:
@@ -55,7 +54,7 @@ class Editor:
 
     def __compress_video(self) -> Video:
         input_file = "./last_video_download/video.mp4"
-        output_file = f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/{self.video.id}_video.mp4"
+        output_file = f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/"
 
         # specify output format and encoding options
         output_options = {
@@ -76,7 +75,7 @@ class Editor:
         ffmpeg_cmd.run()
 
         self.video.status = "edited"
-        self.video.queue_source = output_file
+        self.video.queue_source = output_file + f"{self.video.id}_video.mp4"
         return self.video
 
     def __split_video(self) -> Video:
@@ -120,6 +119,7 @@ class Editor:
             "./last_video_download/video.mp4",
             f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/{self.video.id}_video.mp4",
         )
-        self.video.queue_source = f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/{self.video.id}_video.mp4"
+        self.video.queue_source = f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/"
+        self.video.video_parts.append(f"{self.video.id}_video.mp4")
         self.video.status = "edited"
         return self.video

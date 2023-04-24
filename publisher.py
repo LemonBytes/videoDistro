@@ -16,18 +16,16 @@ from time import sleep
 
 
 class Publisher:
-    driver = None
     config = dotenv_values(".env")
     username = config["PUBLER_ID"]
     password = config["PUBLER_PASSWORD"]
-    video_title = None
+
 
     def __init__(self, video: Video) -> None:
         self.video = video
-        self.__init_driver()
+        
 
     def __init_driver(self):
-        if self.driver is None:
             print("Driver initialized...")
             options = Options()
             options.add_argument("--no-sandbox")
@@ -43,33 +41,33 @@ class Publisher:
                 options=options,
                 executable_path="./chromedriver",
             )
+      
 
     def publish(self):
+        self.__init_driver()
         self.__login()
         self.__setup()
         self.__upload_video()
         self.__customize_instgram_upload()
         self.__customize_youtube_upload()
-        self.__update_status()
+        self.video.status = "done"
         return self.video
 
-    def __update_status(self):
-        if len(self.video.video_parts) <= 1:
-            self.video.status = "done"
-
+  
     def __next_video_path(self) -> str:
         if self.video.queue_source is None:
             raise Exception("Queue source is not set")
         try:
-            video_paths = os.listdir(self.video.queue_source)
-            return os.path.join(self.video.queue_source, video_paths[0])
+            queue_source = self.video.queue_source
+            part_source = self.video.video_parts[0]
+            return queue_source + part_source
         except Exception as e:
             print(e)
             return ""
 
     def __get_video_title(self) -> str:
         if self.video.title is not None:
-            if len(self.video.video_parts) > 0:
+            if len(self.video.video_parts) > 1:
                 last_bit = self.video.video_parts[0].split("_")[3]
                 title_number = int(last_bit.split(".")[0]) + 1
                 return f"{self.video.title} - Part {title_number}"
@@ -141,6 +139,7 @@ class Publisher:
             "/html/body/div/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/input",
         )
         sleep(1)
+        print("uploading video...:" + self.__next_video_path())
         upload_video_button.send_keys(os.path.abspath(self.__next_video_path()))
         self.driver.implicitly_wait(5)
         print("video upload successful")
@@ -209,6 +208,7 @@ class Publisher:
             By.XPATH,
             "/html/body/div[1]/div[2]/div/main/div/main/div[2]/footer/div[2]/button[2]",
         )
-        self.driver.execute_script("arguments[0].click();", publish_button)
-        sleep(20)
+        #self.driver.execute_script("arguments[0].click();", publish_button)
+        sleep(5)
         self.driver.quit()
+        print("video publish successful")

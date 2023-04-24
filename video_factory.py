@@ -18,7 +18,7 @@ class VideoFactory:
         self.video_list = []
 
     def __get_next_upload_part(self):
-        all_folders = os.listdir("./video_upload_queue")
+        all_folders = sorted(os.listdir("./video_upload_queue"))
         next_folder_by_number = 0
         for folder in all_folders:
             folder_number = folder.split("_")[0]
@@ -62,7 +62,6 @@ class VideoFactory:
             videos = data["videos"]
         for video in videos:
             if video["id"] == video_id:
-                print(video)
                 return Video(
                     id=video["id"],
                     title=video["title"],
@@ -73,33 +72,40 @@ class VideoFactory:
                     status=video["status"],
                     video_parts=video["video_parts"],
                 )
-
         return Video()
 
-    def __clean_up_video(self, video: Video) -> None:
+    def __clean_up_process(self, video: Video) -> None:
         if video.queue_source is None:
             raise Exception("Queue source is not set")
-        video_paths = os.listdir(video.queue_source)
-        video_to_delete = os.path.join(video.queue_source, video_paths[0])
+        video_paths = video.queue_source
+        video_to_delete = video_paths + video.video_parts[0]
         os.remove(video_to_delete)
         video_path_after_clean_up = os.listdir(video.queue_source)
         if len(video_path_after_clean_up) == 0:
             os.rmdir(video.queue_source)
-        if len(video.video_parts) > 0:
-            video.video_parts.pop(0)
+        video.video_parts.pop(0)    
+        if len(video.video_parts) > 0:    
+            video.status = "queued"
             self._update_video_json(video)
+        self.video_list.pop(0)    
+
+
 
     def start(self) -> None:
         while self.limit <= self.max_limit:
             if len(self.video_list) == 0:
-                random_number = random.randrange(1, 4)
-                if random_number == 2:
-                    print("new video")
+                video_queue = os.listdir("./video_upload_queue")
+                if len(video_queue) < 0:
                     self.video_list.append(Video(status="init"))
-                else:
-                    print("queue")
-                    video = self.__get_video_from_queue()
-                    self.video_list.append(video)
+                else:    
+                    random_number = random.randrange(1, 3)
+                    if random_number == 2:
+                        print("new video")
+                        self.video_list.append(Video(status="init"))
+                    else:
+                        print("queue")
+                        video = self.__get_video_from_queue()
+                        self.video_list.append(video)
 
             for video in self.video_list:
                 if video and isinstance(video, Video):
@@ -127,13 +133,15 @@ class VideoFactory:
                             self._update_video_json(video)
                             print(video)
                         elif video.status == "edited" or video.status == "queued":
+                            counter = 0
+                            print(counter)
                             publisher = Publisher(video=video)
                             video = publisher.publish()
                             self._update_video_json(video)
-                            print(video)
-                        elif video.status == "done" or video.status == "queued":
-                            self.__clean_up_video(video)
+                            print("test")
+                        elif video.status == "done":
                             self.limit += 1
-                            print(video)
+                            self.__clean_up_process(video)
                             break
+                    break    
             break

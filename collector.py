@@ -4,6 +4,7 @@ import time
 from dotenv import dotenv_values
 from video import Video
 import praw
+import uuid
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
@@ -46,7 +47,7 @@ class Collector:
         return False
 
     def __extract_video_id(self, url):
-        video_id = str(hash(url))
+        video_id = str(uuid.uuid5(uuid.NAMESPACE_URL, url))
         return video_id
 
     def __is_video_unused(self, destination_url, title):
