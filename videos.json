@@ -31,26 +31,6 @@
             "video_parts": []
         },
         {
-            "id": "cn1n4e",
-            "title": "Michael Chandler almost nukes Eddie Alvarez in the first 10 seconds of their first fight before Alvarez clips him with a right hand. Chandler is scheduled to fight Dustin Poirier in 8 days at UFC 281.",
-            "source_url": "https://streamable.com/cn1n4e",
-            "file_size": null,
-            "length": null,
-            "queue_source": null,
-            "status": "pending",
-            "video_parts": []
-        },
-        {
-            "id": "caab973e",
-            "title": "Alex Pereira hurts Bruno Silva at UFC Fight Night: Santos vs. Ankalaev",
-            "source_url": "https://streamin.one/v/caab973e",
-            "file_size": null,
-            "length": null,
-            "queue_source": null,
-            "status": "pending",
-            "video_parts": []
-        },
-        {
             "id": "6U6yaWLTmEM",
             "title": "Sergei Pavlovich | UFC Resume - 2022",
             "source_url": "https://youtu.be/6U6yaWLTmEM",
@@ -67,6 +47,86 @@
                 "6U6yaWLTmEM_video_part_5.mp4",
                 "6U6yaWLTmEM_video_part_6.mp4"
             ]
+        },
+        {
+            "id": "BV3FcAecXL0",
+            "title": "Jon Jones vs Chael Sonnen",
+            "source_url": "https://youtu.be/BV3FcAecXL0",
+            "file_size": 27.762907028198242,
+            "length": 207.273733,
+            "queue_source": "./video_upload_queue/0_BV3FcAecXL0/",
+            "status": "queued",
+            "video_parts": [
+                "BV3FcAecXL0_video_part_2.mp4",
+                "BV3FcAecXL0_video_part_3.mp4",
+                "BV3FcAecXL0_video_part_4.mp4",
+                "BV3FcAecXL0_video_part_5.mp4",
+                "BV3FcAecXL0_video_part_6.mp4",
+                "BV3FcAecXL0_video_part_7.mp4",
+                "BV3FcAecXL0_video_part_8.mp4",
+                "BV3FcAecXL0_video_part_9.mp4",
+                "BV3FcAecXL0_video_part_10.mp4"
+            ]
+        },
+        {
+            "id": "unfortunatemammothhamster",
+            "title": "[Fight Clip] Mateo Vogel KOs Taylor Christopher",
+            "source_url": "https://gfycat.com/unfortunatemammothhamster",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "pending",
+            "video_parts": []
+        },
+        {
+            "id": "pleasingtastyjackal",
+            "title": "Demetrious Johnson taking down his opponents",
+            "source_url": "https://gfycat.com/pleasingtastyjackal",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "pending",
+            "video_parts": []
+        },
+        {
+            "id": "youtube.com",
+            "title": "Hitting an Unconscious Opponent in MMA: Super Necessary or Super Unneces...",
+            "source_url": "https://youtube.com/watch?v=5Ch4mB0ZZ7A&feature=share",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "downloaded",
+            "video_parts": []
+        },
+        {
+            "id": "7545641812179151063",
+            "title": "Michael Chandler almost nukes Eddie Alvarez in the first 10 seconds of their first fight before Alvarez clips him with a right hand. Chandler is scheduled to fight Dustin Poirier in 8 days at UFC 281.",
+            "source_url": "https://streamable.com/cn1n4e",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "pending",
+            "video_parts": []
+        },
+        {
+            "id": "3694327407186290612",
+            "title": "Rafael Fiziev fakes a knee to clip Rafael Dos Santos with a left hook claiming his title as the best Rafael in the UFC",
+            "source_url": "https://gfycat.com/perfectadorablecentipede",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "pending",
+            "video_parts": []
+        },
+        {
+            "id": "4987380257504615379",
+            "title": "Rafael Fiziev fakes a knee to clip Rafael Dos Santos with a left hook claiming his title as the best Rafael in the UFC",
+            "source_url": "https://gfycat.com/perfectadorablecentipede",
+            "file_size": 2.7016372680664062,
+            "length": 13.000065,
+            "queue_source": "./video_upload_queue/3_4987380257504615379/4987380257504615379_video.mp4",
+            "status": "edited",
+            "video_parts": []
         }
     ]
 }

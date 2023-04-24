@@ -2,8 +2,6 @@ import json
 import random
 import time
 from dotenv import dotenv_values
-
-# import asyncpraw
 from video import Video
 import praw
 
@@ -13,9 +11,15 @@ headers = {
 
 
 class Collector:
-    # gather = Gathrer("reddit")
-    # video = gather.get_video(eventloop)
-    # nach zufallsprinzip für eine quelle entscheiden
+    domains = [
+        "streamable.com",
+        "streamin.one",
+        "youtube.com",
+        "youtu.be",
+        "dubz.co",
+        "gfycat.com",
+    ]
+
     def __init__(self, origin, video: Video):
         self.origin = origin
         self.video = video
@@ -25,7 +29,7 @@ class Collector:
             video = self.__get_reddit_video(
                 "MMA",
                 [
-                    #"Full Fight",
+                    # "Full Fight",
                     "FIGHT CLIP",
                     "Highlights",
                 ],
@@ -35,13 +39,14 @@ class Collector:
             self.video.status = "error"
             return self.video
 
+    def __viable_video_source(self, url):
+        for domain in self.domains:
+            if domain in url:
+                return True
+        return False
+
     def __extract_video_id(self, url):
-        if "youtube" in url:
-            video_id = url.split("=")[-1]
-            if(video_id == "share"):
-                video_id = url.split("/")[-2]
-        else:
-            video_id = url.split("/")[-1]
+        video_id = str(hash(url))
         return video_id
 
     def __is_video_unused(self, destination_url, title):
@@ -67,15 +72,7 @@ class Collector:
         for post in subreddit.search(
             "flair:" + chosenflair, syntax="lucene", limit=None
         ):
-            if (
-                "youtube.com"
-                or "youtu.be"
-                or "dubz.co"
-                or "gfycat.cm"
-                or "streamable.com" 
-                or "streamin.one"
-                in post.url
-            ):
+            if self.__viable_video_source(post.url):
                 if self.__is_video_unused(post.url, post.title):
                     print("Found unused video")
                     self.video.title = post.title

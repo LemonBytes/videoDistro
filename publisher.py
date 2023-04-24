@@ -37,15 +37,13 @@ class Publisher:
                 "excludeSwitches", ["enable-logging", "enable-automation"]
             )
             options.add_argument("window-size=1280,800")
-            #options.add_argument("--headless")
-            #options.add_argument("--disable-gpu")
+            # options.add_argument("--headless")
+            # options.add_argument("--disable-gpu")
             self.driver = webdriver.Chrome(
                 options=options,
                 executable_path="./chromedriver",
             )
 
-
-          
     def publish(self):
         self.__login()
         self.__setup()
@@ -55,13 +53,9 @@ class Publisher:
         self.__update_status()
         return self.video
 
-            
-
     def __update_status(self):
         if len(self.video.video_parts) <= 1:
-            self.video.status = "done"    
-         
-        
+            self.video.status = "done"
 
     def __next_video_path(self) -> str:
         if self.video.queue_source is None:
@@ -73,7 +67,15 @@ class Publisher:
             print(e)
             return ""
 
-       
+    def __get_video_title(self) -> str:
+        if self.video.title is not None:
+            if len(self.video.video_parts) > 0:
+                last_bit = self.video.video_parts[0].split("_")[3]
+                title_number = int(last_bit.split(".")[0]) + 1
+                return f"{self.video.title} - Part {title_number}"
+            return self.video.title
+        return ""
+
     def __login(self):
         if self.driver is None:
             return 0
@@ -107,7 +109,6 @@ class Publisher:
             print(e)
             self.driver.quit()
             exit(1)
-
 
     def __setup(self):
         if self.driver is None:
@@ -144,7 +145,6 @@ class Publisher:
         self.driver.implicitly_wait(5)
         print("video upload successful")
 
-    
     def __customize_instgram_upload(self):
         if self.driver is None:
             return 0
@@ -173,13 +173,13 @@ class Publisher:
         )
         self.driver.execute_script("arguments[0].click();", aria_label)
         sleep(2)
-        ActionChains(self.driver).send_keys("", self.video_title).perform()
+        ActionChains(self.driver).send_keys("", self.__get_video_title()).perform()
         sleep(2)
         ActionChains(self.driver).send_keys(Keys.ENTER).perform()
         for i in range(3):
             ActionChains(self.driver).send_keys(Keys.ENTER).perform()
             ActionChains(self.driver).send_keys("", "follow @warofmind_").perform()
-        ActionChains(self.driver).send_keys(Keys.ENTER).perform()
+        ActionChains(self.driver).send_keys(Keys.ENTER * 2).perform()
         sleep(1)
         ActionChains(self.driver).send_keys(Keys.ENTER).perform()
         ActionChains(self.driver).send_keys(
@@ -187,15 +187,12 @@ class Publisher:
         ).perform()
         sleep(2)
 
-
-
-
     def __customize_youtube_upload(self):
         if self.driver is None:
             return 0
         ActionChains(self.driver).send_keys(Keys.TAB * 2).perform()
         sleep(2)
-        ActionChains(self.driver).send_keys("", self.video_title).perform()
+        ActionChains(self.driver).send_keys("", self.__get_video_title()).perform()
         sleep(1)
         ActionChains(self.driver).send_keys(Keys.TAB * 1).perform()
         ActionChains(self.driver).send_keys(
@@ -215,4 +212,3 @@ class Publisher:
         self.driver.execute_script("arguments[0].click();", publish_button)
         sleep(20)
         self.driver.quit()
-    
