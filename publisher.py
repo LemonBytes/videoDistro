@@ -208,7 +208,7 @@ class Publisher:
             By.XPATH,
             "/html/body/div[1]/div[2]/div/main/div/main/div[2]/footer/div[2]/button[2]",
         )
-        #self.driver.execute_script("arguments[0].click();", publish_button)
-        sleep(5)
+        self.driver.execute_script("arguments[0].click();", publish_button)
+        sleep(10)
         self.driver.quit()
         print("video publish successful")
