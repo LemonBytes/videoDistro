@@ -20,28 +20,25 @@ class Publisher:
     username = config["PUBLER_ID"]
     password = config["PUBLER_PASSWORD"]
 
-
     def __init__(self, video: Video) -> None:
         self.video = video
-        
 
     def __init_driver(self):
-            print("Driver initialized...")
-            options = Options()
-            options.add_argument("--no-sandbox")
-            options.add_argument("--log-level=3")
-            options.add_argument("--lang=en")
-            options.add_experimental_option(
-                "excludeSwitches", ["enable-logging", "enable-automation"]
-            )
-            options.add_argument("window-size=1280,800")
-            # options.add_argument("--headless")
-            # options.add_argument("--disable-gpu")
-            self.driver = webdriver.Chrome(
-                options=options,
-                executable_path="./chromedriver",
-            )
-      
+        print("Driver initialized...")
+        options = Options()
+        options.add_argument("--no-sandbox")
+        options.add_argument("--log-level=3")
+        options.add_argument("--lang=en")
+        options.add_experimental_option(
+            "excludeSwitches", ["enable-logging", "enable-automation"]
+        )
+        options.add_argument("window-size=1280,800")
+        options.add_argument("--headless")
+        # options.add_argument("--disable-gpu")
+        self.driver = webdriver.Chrome(
+            options=options,
+            executable_path="./chromedriver",
+        )
 
     def publish(self):
         self.__init_driver()
@@ -53,7 +50,6 @@ class Publisher:
         self.video.status = "done"
         return self.video
 
-  
     def __next_video_path(self) -> str:
         if self.video.queue_source is None:
             raise Exception("Queue source is not set")
@@ -209,6 +205,6 @@ class Publisher:
             "/html/body/div[1]/div[2]/div/main/div/main/div[2]/footer/div[2]/button[2]",
         )
         self.driver.execute_script("arguments[0].click();", publish_button)
-        sleep(10)
+        sleep(15)
         self.driver.quit()
         print("video publish successful")

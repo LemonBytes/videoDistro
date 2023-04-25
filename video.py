@@ -1,5 +1,4 @@
 from typing import Optional
-from pydantic import UUID5
 
 
 class Video:

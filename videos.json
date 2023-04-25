@@ -39,8 +39,6 @@
             "queue_source": "./video_upload_queue/0_BV3FcAecXL0/",
             "status": "queued",
             "video_parts": [
-                "BV3FcAecXL0_video_part_3.mp4",
-                "BV3FcAecXL0_video_part_4.mp4",
                 "BV3FcAecXL0_video_part_5.mp4",
                 "BV3FcAecXL0_video_part_6.mp4",
                 "BV3FcAecXL0_video_part_7.mp4",
