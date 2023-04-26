@@ -74,7 +74,7 @@
             "file_size": 2.7016372680664062,
             "length": 13.000065,
             "queue_source": "./video_upload_queue/3_8ab17f5d-0a7f-5281-98cc-de3bf4e4a23f/",
-            "status": "edited",
+            "status": "done",
             "video_parts": [
                 "8ab17f5d-0a7f-5281-98cc-de3bf4e4a23f_video.mp4"
             ]
@@ -88,7 +88,6 @@
             "queue_source": "./video_upload_queue/4_1a8a311c-92e1-5de9-a860-211302372497/",
             "status": "queued",
             "video_parts": [
-                "1a8a311c-92e1-5de9-a860-211302372497_video_part_1.mp4",
                 "1a8a311c-92e1-5de9-a860-211302372497_video_part_2.mp4",
                 "1a8a311c-92e1-5de9-a860-211302372497_video_part_3.mp4",
                 "1a8a311c-92e1-5de9-a860-211302372497_video_part_4.mp4",
@@ -114,6 +113,26 @@
             "length": 60.0,
             "queue_source": "",
             "status": "downloaded",
+            "video_parts": []
+        },
+        {
+            "id": "c6d2c71f-0c9c-5250-adec-2b99abdca136",
+            "title": "This man speaks with great passion \ud83d\udd25",
+            "source_url": "https://youtu.be/GperBZBWJLk",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "pending",
+            "video_parts": []
+        },
+        {
+            "id": null,
+            "title": null,
+            "source_url": null,
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "error",
             "video_parts": []
         }
     ]
