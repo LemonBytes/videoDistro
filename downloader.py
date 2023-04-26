@@ -19,6 +19,10 @@ class Downloader:
             {"domain": "youtu.be", "download_function": self.__download_from_youtube},
             {"domain": "dubz.co", "download_function": self.__download_dubz_videos},
             {
+                "domain": "reddit.com",
+                "download_function": self.__download_reddit_videos,
+            },
+            {
                 "domain": "youtube.com",
                 "download_function": self.__download_from_youtube,
             },
@@ -136,4 +140,18 @@ class Downloader:
             print("finished downloading video")
         except Exception as e:
             print(e)
+            raise Exception("Error downloading video")
+
+    def __download_reddit_videos(self):
+        if self.video.source_url is None:
+            self.video.status = "error"
+            raise Exception("No video source url")
+        try:
+            site = requests.get(f"{self.video.source_url}.json", headers=self.headers)
+            json_site = site.json()
+            print(json_site)
+            print(site.content)
+        except Exception as e:
+            print(e)
+            self.video.status = "error"
             raise Exception("Error downloading video")

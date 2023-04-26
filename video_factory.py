@@ -20,7 +20,7 @@ class VideoFactory:
         while self.limit <= self.max_limit:
             if len(self.video_list) == 0:
                 video_queue = os.listdir("./video_upload_queue")
-                if len(video_queue) < 0:
+                if len(video_queue) > 1:
                     self.video_list.append(Video(status="init"))
                 else:
                     random_number = random.randrange(1, 4)
@@ -39,13 +39,11 @@ class VideoFactory:
                             collector = Collector(origin="reddit", video=video)
                             video = collector.get_video()
                             self._update_video_json(video)
-                            print(video)
                         elif video.status == "pending":
-                            print("3")
                             downloader = Downloader(video=video)
                             video = downloader.download()
                             self._update_video_json(video)
-                            print(video)
+                            break
                         elif video.status == "downloaded":
                             self.__create_folder(
                                 f"{self.next_upload_number}_{video.id}"

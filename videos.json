@@ -105,6 +105,16 @@
             "queue_source": "./video_upload_queue/5_09b70dd1-b888-5132-9377-c0af9df9bbe8/",
             "status": "queued",
             "video_parts": []
+        },
+        {
+            "id": "7f2b54cf-6876-5fe9-b2a1-91725c310a72",
+            "title": "Goggins on Suicide and \"being in the sewer of life\"",
+            "source_url": "https://www.reddit.com/r/davidgoggins/comments/llbns0/goggins_on_suicide_and_being_in_the_sewer_of_life/",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "downloaded",
+            "video_parts": []
         }
     ]
 }
