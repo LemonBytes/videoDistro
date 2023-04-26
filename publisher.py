@@ -1,8 +1,5 @@
 from video import Video
-import json
 import os
-import random
-import subprocess
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
@@ -33,7 +30,7 @@ class Publisher:
             "excludeSwitches", ["enable-logging", "enable-automation"]
         )
         options.add_argument("window-size=1280,800")
-        #options.add_argument("--headless")
+        options.add_argument("--headless")
         # options.add_argument("--disable-gpu")
         self.driver = webdriver.Chrome(
             options=options,
