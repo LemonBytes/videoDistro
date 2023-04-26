@@ -30,7 +30,7 @@ class VideoFactory:
                         self.video_list.append(video)
                     else:
                         print("new video")
-                        self.video_list.append(Video(status="init"))
+                        self.video_list.append(Video(status="downloaded"))
             for video in self.video_list:
                 if video and isinstance(video, Video):
                     while video.status != "error" or video.status != "done":
