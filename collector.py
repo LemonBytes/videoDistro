@@ -1,7 +1,5 @@
 import json
 import random
-
-from anyio import sleep
 from dotenv import dotenv_values
 from video import Video
 import praw
