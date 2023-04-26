@@ -84,7 +84,8 @@ ipython_config.py
 # pyenv
 .python-version
 
-
+#video
+*.mp4
 
 
 # pipenv
