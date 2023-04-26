@@ -1,8 +1,8 @@
 import json
 import random
-import time
+
+from anyio import sleep
 from dotenv import dotenv_values
-import requests
 from video import Video
 import praw
 import uuid
@@ -14,28 +14,27 @@ headers = {
 
 class Collector:
     domains = [
-        # "streamable.com",
-        # "streamin.one",
-        # "youtube.com",
-        # "youtu.be",
-        # "dubz.co",
-        # "gfycat.com",
-        "v.redd.it",
+        "streamable.com",
+        "streamin.one",
+        "youtube.com",
+        "youtu.be",
+        "dubz.co",
+        "gfycat.com",
     ]
     subreddits = [
-        # {
-        #     "MMA": [
-        #         "Full Fight",
-        #         "FIGHT CLIP",
-        #         "Highlights",
-        #     ],
-        # },
+        {
+            "MMA": [
+                "Full Fight",
+                "FIGHT CLIP",
+                "Highlights",
+            ],
+        },
         {
             "davidgoggins": ["Motivation", "Goggins Speaks"],
         },
-        # {
-        #     "Boxing": [],
-        # },
+        {
+            "Boxing": [],
+        },
     ]
 
     def __init__(self, origin, video: Video):
@@ -48,6 +47,7 @@ class Collector:
             return video
         else:
             self.video.status = "error"
+            print("Error: Origin not found")
             return self.video
 
     def __get_reddit_video(self) -> Video:
@@ -68,12 +68,7 @@ class Collector:
         for post in subreddit.search(chosenflair, syntax="lucene", limit=None):
             if self.__viable_video_source(post.url):
                 if self.__is_video_unused(post.url, post.title):
-                    if "v.redd.it" in post.url:
-                        request = requests.head(post.url, allow_redirects=True)
-                        length_of_history = len(request.history) - 1
-                        self.video.source_url = request.history[length_of_history].url
-                    else:
-                        self.video.source_url = post.url
+                    self.video.source_url = post.url
                     self.video.title = post.title
                     self.video.id = self.__extract_video_id(post.url)
                     self.video.status = "pending"

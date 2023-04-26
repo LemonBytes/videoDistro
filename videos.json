@@ -107,14 +107,17 @@
             "video_parts": []
         },
         {
-            "id": "7f2b54cf-6876-5fe9-b2a1-91725c310a72",
-            "title": "Goggins on Suicide and \"being in the sewer of life\"",
-            "source_url": "https://www.reddit.com/r/davidgoggins/comments/llbns0/goggins_on_suicide_and_being_in_the_sewer_of_life/",
-            "file_size": null,
-            "length": null,
-            "queue_source": null,
-            "status": "downloaded",
-            "video_parts": []
+            "id": "3c6d2292-4c14-5215-bb2b-915d5b5a8193",
+            "title": "David Goggins - SUPERHERO (edit)",
+            "source_url": "https://youtube.com/watch?v=dPJCtzWeToE&feature=share",
+            "file_size": 13.394250869750977,
+            "length": 79.4794,
+            "queue_source": "./video_upload_queue/5_3c6d2292-4c14-5215-bb2b-915d5b5a8193/",
+            "status": "queued",
+            "video_parts": [
+                "3c6d2292-4c14-5215-bb2b-915d5b5a8193_video_part_1.mp4",
+                "3c6d2292-4c14-5215-bb2b-915d5b5a8193_video_part_2.mp4"
+            ]
         }
     ]
 }

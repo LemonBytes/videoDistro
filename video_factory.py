@@ -18,9 +18,9 @@ class VideoFactory:
 
     def start(self) -> None:
         while self.limit <= self.max_limit:
-            if len(self.video_list) == 0:
+            if len(self.video_list) < 1:
                 video_queue = os.listdir("./video_upload_queue")
-                if len(video_queue) > 1:
+                if len(video_queue) < 1:
                     self.video_list.append(Video(status="init"))
                 else:
                     random_number = random.randrange(1, 4)
@@ -36,14 +36,16 @@ class VideoFactory:
                     while video.status != "error" or video.status != "done":
                         self.__get_next_upload_part()
                         if video.status == "init":
+                            print("init")
                             collector = Collector(origin="reddit", video=video)
                             video = collector.get_video()
                             self._update_video_json(video)
+                            print(video.status)
                         elif video.status == "pending":
                             downloader = Downloader(video=video)
                             video = downloader.download()
                             self._update_video_json(video)
-                            break
+                            print(video.status)
                         elif video.status == "downloaded":
                             self.__create_folder(
                                 f"{self.next_upload_number}_{video.id}"
@@ -53,7 +55,7 @@ class VideoFactory:
                             )
                             video = editor.edit()
                             self._update_video_json(video)
-                            print(video)
+                            print(video.status)
                         elif video.status == "edited" or video.status == "queued":
                             publisher = Publisher(video=video)
                             video = publisher.publish()
@@ -63,7 +65,12 @@ class VideoFactory:
                             self.__clean_up_process(video)
                             print("clean up")
                             break
-                    break
+                        elif video.status == "error":
+                            self.limit = 0
+                            self.video_list.pop(0)
+                            self.video_list.append(Video(status="init"))
+                            break
+                   
             break
 
     def __get_next_upload_part(self):

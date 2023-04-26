@@ -33,7 +33,7 @@ class Publisher:
             "excludeSwitches", ["enable-logging", "enable-automation"]
         )
         options.add_argument("window-size=1280,800")
-        options.add_argument("--headless")
+        #options.add_argument("--headless")
         # options.add_argument("--disable-gpu")
         self.driver = webdriver.Chrome(
             options=options,
@@ -67,7 +67,8 @@ class Publisher:
                 last_bit = self.video.video_parts[0].split("_")[3]
                 title_number = int(last_bit.split(".")[0]) + 1
                 return f"{self.video.title} - Part {title_number}"
-            return self.video.title
+            #return first 100 characters of title
+            return self.video.title[:100]
         return ""
 
     def __login(self):

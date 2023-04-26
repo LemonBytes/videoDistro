@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 from video import Video
 from pytube import YouTube
-
+import pandas 
 
 class Downloader:
     headers = {
@@ -18,10 +18,6 @@ class Downloader:
         sources = [
             {"domain": "youtu.be", "download_function": self.__download_from_youtube},
             {"domain": "dubz.co", "download_function": self.__download_dubz_videos},
-            {
-                "domain": "reddit.com",
-                "download_function": self.__download_reddit_videos,
-            },
             {
                 "domain": "youtube.com",
                 "download_function": self.__download_from_youtube,
@@ -147,10 +143,10 @@ class Downloader:
             self.video.status = "error"
             raise Exception("No video source url")
         try:
-            site = requests.get(f"{self.video.source_url}.json", headers=self.headers)
-            json_site = site.json()
-            print(json_site)
-            print(site.content)
+            data = requests.get(f"{self.video.source_url}.json").json()
+            print(data)
+            url = data[0]
+            print(url)
         except Exception as e:
             print(e)
             self.video.status = "error"
