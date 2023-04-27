@@ -95,7 +95,7 @@ class Editor:
                 vcodec="copy",
                 acodec="copy",
                 reset_timestamps=1,
-                map="0:0",
+                map="0",
             )
             .run()
         )

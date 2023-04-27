@@ -126,6 +126,53 @@
             "video_parts": []
         },
         {
+            "id": "c8852648-35ff-549b-b8e6-236441230fa1",
+            "title": "Dricus du Plessis vs. Roberto Soldic | KSW Free Fight",
+            "source_url": "https://youtu.be/SLFbHWy_IdY",
+            "file_size": 81.24946117401123,
+            "length": 540.16,
+            "queue_source": "./video_upload_queue/3_c8852648-35ff-549b-b8e6-236441230fa1/",
+            "status": "queued",
+            "video_parts": [
+                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_1.mp4",
+                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_2.mp4",
+                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_3.mp4",
+                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_4.mp4",
+                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_5.mp4",
+                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_6.mp4",
+                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_7.mp4",
+                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_8.mp4",
+                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_9.mp4"
+            ]
+        },
+        {
+            "id": "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf",
+            "title": "European Prodigy vs. Thai Legend",
+            "source_url": "https://www.youtube.com/watch?v=p2ATfNjUeKY&t",
+            "file_size": 117.7,
+            "length": 881,
+            "queue_source": "./video_upload_queue/4_b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf/",
+            "status": "queued",
+            "video_parts": [
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_0.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_1.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_2.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_3.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_4.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_5.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_6.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_7.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_8.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_9.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_10.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_11.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_12.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_13.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_14.mp4",
+                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_15.mp4"
+            ]
+        },
+        {
             "id": null,
             "title": null,
             "source_url": null,
