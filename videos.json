@@ -181,6 +181,21 @@
             "queue_source": null,
             "status": "error",
             "video_parts": []
+        },
+        {
+            "id": "85fc71e5-cf27-5b0c-9a0c-fa46399271ec",
+            "title": "Gervonta Davis vs. Ryan Garcia Heated Face Off: \u201cYou look DRAINED!\u201d",
+            "source_url": "https://youtu.be/Ix8u-gchUbk",
+            "file_size": 11.441789627075195,
+            "length": 134.259125,
+            "queue_source": "./video_upload_queue/5_85fc71e5-cf27-5b0c-9a0c-fa46399271ec/",
+            "status": "done",
+            "video_parts": [
+                "85fc71e5-cf27-5b0c-9a0c-fa46399271ec_video_part_1.mp4",
+                "85fc71e5-cf27-5b0c-9a0c-fa46399271ec_video_part_2.mp4",
+                "85fc71e5-cf27-5b0c-9a0c-fa46399271ec_video_part_3.mp4",
+                "85fc71e5-cf27-5b0c-9a0c-fa46399271ec_video_part_4.mp4"
+            ]
         }
     ]
 }

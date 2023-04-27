@@ -18,60 +18,60 @@ class VideoFactory:
 
     def start(self) -> None:
         while self.limit <= self.max_limit:
-            if len(self.video_list) < 1:
+            if not self.video_list:
                 video_queue = os.listdir("./video_upload_queue")
                 if len(video_queue) < 1:
+                    print("new video")
                     self.video_list.append(Video(status="init"))
                 else:
-                    random_number = random.randrange(1, 5)
-                    if random_number == 2:
+                    if random.randint(1, 5) == 2:
                         print("queue")
                         video = self.__get_video_from_queue()
                         self.video_list.append(video)
                     else:
                         print("new video")
                         self.video_list.append(Video(status="init"))
-            for video in self.video_list:
-                if video and isinstance(video, Video):
-                    while video.status != "error" or video.status != "done":
-                        self.__get_next_upload_part()
-                        if video.status == "init":
-                            print("init")
-                            collector = Collector(origin="reddit", video=video)
-                            video = collector.get_video()
-                            self._update_video_json(video)
-                            print(video.status)
-                        elif video.status == "pending":
-                            downloader = Downloader(video=video)
-                            video = downloader.download()
-                            self._update_video_json(video)
-                            print(video.status)
-                        elif video.status == "downloaded":
-                            self.__create_folder(
-                                f"{self.next_upload_number}_{video.id}"
-                            )
-                            editor = Editor(
-                                next_upload_number=self.next_upload_number, video=video
-                            )
-                            video = editor.edit()
-                            self._update_video_json(video)
-                            print(video.status)
-                        elif video.status == "edited" or video.status == "queued":
-                            publisher = Publisher(video=video)
-                            video = publisher.publish()
-                            self._update_video_json(video)
-                        elif video.status == "done":
-                            self.limit += 1
-                            self.__clean_up_process(video)
-                            print("clean up")
-                            break
-                        elif video.status == "error":
-                            self.limit = 0
-                            self.video_list.pop(0)
-                            self.video_list.append(Video(status="init"))
-                            break
-                   
-            break
+            video = self.video_list[0]
+            while (
+                video
+                and isinstance(video, Video)
+                and video.status not in ("done", "error")
+            ):
+                self.__get_next_upload_part()
+                if video.status == "init":
+                    print("init")
+                    collector = Collector(origin="reddit", video=video)
+                    video = collector.get_video()
+                    self._update_video_json(video)
+                    print(video.status)
+                    print("test")
+                if video.status == "pending":
+                    downloader = Downloader(video=video)
+                    video = downloader.download()
+                    self._update_video_json(video)
+                    print(video.status)
+                if video.status == "downloaded":
+                    self.__create_folder(f"{self.next_upload_number}_{video.id}")
+                    editor = Editor(
+                        next_upload_number=self.next_upload_number, video=video
+                    )
+                    video = editor.edit()
+                    self._update_video_json(video)
+                    print(video.status)
+                if video.status == "edited" or video.status == "queued":
+                    publisher = Publisher(video=video)
+                    video = publisher.publish()
+                    self._update_video_json(video)
+		    print(video.status)
+                if video.status == "done":
+                    self.limit += 1
+                    self.__clean_up_process(video)
+                    print("clean up successfull")
+                if video.status == "error":
+                    print("resetting process")
+                    self.limit = 0
+                    self.video_list.pop(0)
+                    self.video_list.append(Video(status="init"))
 
     def __get_next_upload_part(self):
         all_folders = sorted(os.listdir("./video_upload_queue"))

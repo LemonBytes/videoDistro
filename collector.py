@@ -54,7 +54,7 @@ class Collector:
             chosenflair = "flair:" + random.choice(source["flairs"])
             print(f"Chosen flair: {chosenflair}")
         else:
-            chosenflair = ""
+            chosenflair = "*"
         subreddit_name = source["subreddit_name"]
         config = dotenv_values(".env")
         reddit = praw.Reddit(
