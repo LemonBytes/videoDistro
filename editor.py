@@ -6,7 +6,7 @@ from video import Video
 
 
 class Editor:
-    SEGEMENT = 55
+    SEGEMENT = 60
 
     def __init__(self, video: Video, next_upload_number: int):
         self.video = video
@@ -83,8 +83,8 @@ class Editor:
         output_directory = (
             f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/"
         )
-        split_time = self.__get_cutting_part(self.video.length)
-        segment_time = split_time
+
+        segment_time = self.__get_cutting_part(self.video.length)
 
         (
             ffmpeg.input(input_file)
@@ -102,7 +102,7 @@ class Editor:
 
         # list directory alphhabetic
 
-        self.video.video_parts = sorted(os.listdir(output_directory))
+        self.video.video_parts = os.listdir(output_directory).sort(key=lambda x: int(x.split("_")[-1].split(".")[0]))
         self.video.status = "queued"
         self.video.queue_source = output_directory
         return self.video

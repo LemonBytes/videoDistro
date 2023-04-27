@@ -1,3 +1,4 @@
+import time
 import urllib.request
 from bs4 import BeautifulSoup
 import requests
@@ -38,34 +39,42 @@ class Downloader:
         return sources
 
     def download(self):
-        if self.video.source_url is None:
-            self.video.status = "error"
-            return self.video
-        else:
-            for source in self.__get_sources():
-                if source["domain"] in self.video.source_url:
-                    source["download_function"]()
-                    self.video.status = "downloaded"
-                    break
-            else:
+        try:
+            if self.video.source_url is None:
                 self.video.status = "error"
+                return self.video
+            else:
+                for source in self.__get_sources():
+                    if source["domain"] in self.video.source_url:
+                        source["download_function"]()
+                        self.video.status = "downloaded"
+                        break
+                else:
+                    self.video.status = "error"
+        except:
+            self.video.status = "error"
         return self.video
 
-    def __download_from_youtube(self, counter=0):
+    def __download_from_youtube(self, counter=0, new_url=""):
         if self.video.source_url is None:
             self.video.status = "error"
             raise Exception("No video source url")
+        new_url = new_url
         try:
+            if "youtu.be" in self.video.source_url and new_url == "":
+                res = requests.get(self.video.source_url, allow_redirects=True)
+                new_url = res.url
             yt = YouTube(self.video.source_url)
             stream = yt.streams.get_highest_resolution()
             stream.download("./last_video_download/", "video.mp4")  # type: ignore
             print("finished downloading video")
         except Exception as e:
-            if counter > 10:
-                self.video.status = "error"
+            if counter > 25:
                 print(e)
                 raise Exception("Error downloading video")
-            self.__download_from_youtube(counter=counter + 1)
+            time.sleep(4)
+            print(f"counter:{counter}")  # import time
+            return self.__download_from_youtube(counter=counter + 1, new_url=new_url)
 
     def __download_dubz_videos(self):
         if self.video.source_url is None:
@@ -138,16 +147,16 @@ class Downloader:
             print(e)
             raise Exception("Error downloading video")
 
-    def __download_reddit_videos(self):
-        if self.video.source_url is None:
-            self.video.status = "error"
-            raise Exception("No video source url")
-        try:
-            data = requests.get(f"{self.video.source_url}.json").json()
-            print(data)
-            url = data[0]
-            print(url)
-        except Exception as e:
-            print(e)
-            self.video.status = "error"
-            raise Exception("Error downloading video")
+    # def __download_reddit_videos(self):
+    #     if self.video.source_url is None:
+    #         self.video.status = "error"
+    #         raise Exception("No video source url")
+    #     try:
+    #         data = requests.get(f"{self.video.source_url}.json").json()
+    #         print(data)
+    #         url = data[0]
+    #         print(url)
+    #     except Exception as e:
+    #         print(e)
+    #         self.video.status = "error"
+    #         raise Exception("Error downloading video")
