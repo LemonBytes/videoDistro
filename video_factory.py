@@ -29,6 +29,7 @@ class VideoFactory:
                     else:
                         print("queue")
                         self.video = self.__get_video_from_queue()
+                        print(self.video.status)
             while (
                 self.video
                 and isinstance(self.video, Video)
@@ -112,7 +113,7 @@ class VideoFactory:
         length_of_queue = len(os.listdir("./video_upload_queue"))
         random_number = random.randrange(0, length_of_queue)
         folder = os.listdir("./video_upload_queue")[random_number]
-        video_id = folder.split("_")[1]
+        video_id = folder[2:]
         with open("./videos.json", "r") as f:
             data = json.load(f)
             videos = data["videos"]
@@ -136,9 +137,10 @@ class VideoFactory:
         video_paths = video.queue_source
         video_to_delete = video_paths + video.video_parts[0]
         os.remove(video_to_delete)
-        video_path_after_clean_up = os.listdir(video.queue_source)
-        if len(video_path_after_clean_up) == 0:
-            os.rmdir(video.queue_source)
+        folders = os.listdir("./video_upload_queue")
+        for folder in folders:
+            if not os.listdir(f"./video_upload_queue/{folder}"):
+                os.rmdir(f"./video_upload_queue/{folder}")
         video.video_parts.pop(0)
         print(video.video_parts)
         if len(video.video_parts) > 0:
