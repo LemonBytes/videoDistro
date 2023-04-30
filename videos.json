@@ -39,10 +39,6 @@
             "queue_source": "./video_upload_queue/0_BV3FcAecXL0/",
             "status": "queued",
             "video_parts": [
-                "BV3FcAecXL0_video_part_5.mp4",
-                "BV3FcAecXL0_video_part_6.mp4",
-                "BV3FcAecXL0_video_part_7.mp4",
-                "BV3FcAecXL0_video_part_8.mp4",
                 "BV3FcAecXL0_video_part_9.mp4",
                 "BV3FcAecXL0_video_part_10.mp4"
             ]
@@ -134,7 +130,6 @@
             "queue_source": "./video_upload_queue/3_c8852648-35ff-549b-b8e6-236441230fa1/",
             "status": "queued",
             "video_parts": [
-                "c8852648-35ff-549b-b8e6-236441230fa1_video_part_2.mp4",
                 "c8852648-35ff-549b-b8e6-236441230fa1_video_part_3.mp4",
                 "c8852648-35ff-549b-b8e6-236441230fa1_video_part_4.mp4",
                 "c8852648-35ff-549b-b8e6-236441230fa1_video_part_5.mp4",
@@ -153,8 +148,6 @@
             "queue_source": "./video_upload_queue/4_b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf/",
             "status": "queued",
             "video_parts": [
-                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_1.mp4",
-                "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_2.mp4",
                 "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_3.mp4",
                 "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_4.mp4",
                 "b26fce78-5ca5-5c4d-bc4c-be3ee898ebcf_video_part_5.mp4",
@@ -204,10 +197,6 @@
             "queue_source": "./video_upload_queue/6_fd9deaa1-f229-5570-81be-a7b0cd036be1/",
             "status": "queued",
             "video_parts": [
-                "fd9deaa1-f229-5570-81be-a7b0cd036be1_video_part_1.mp4",
-                "fd9deaa1-f229-5570-81be-a7b0cd036be1_video_part_2.mp4",
-                "fd9deaa1-f229-5570-81be-a7b0cd036be1_video_part_3.mp4",
-                "fd9deaa1-f229-5570-81be-a7b0cd036be1_video_part_4.mp4",
                 "fd9deaa1-f229-5570-81be-a7b0cd036be1_video_part_5.mp4",
                 "fd9deaa1-f229-5570-81be-a7b0cd036be1_video_part_6.mp4",
                 "fd9deaa1-f229-5570-81be-a7b0cd036be1_video_part_7.mp4",
@@ -249,6 +238,36 @@
             "queue_source": null,
             "status": "error",
             "video_parts": []
+        },
+        {
+            "id": "fd4f04a7-bef3-559e-8d2d-cad2dc716ed1",
+            "title": "Joe Rogan on David Goggin: The Navy Seals legacy | JRE",
+            "source_url": "https://www.youtube.com/shorts/_Fz9rsu4cj4",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "error",
+            "video_parts": []
+        },
+        {
+            "id": "9e7d5033-dac7-5293-9873-af30be6db493",
+            "title": "[SPOILER] Jake Paul vs. Tommy Fury",
+            "source_url": "https://dubz.co/video/088d5a",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "error",
+            "video_parts": []
+        },
+        {
+            "id": "0f4beb52-bea4-5f6f-8afc-df39129f5e26",
+            "title": "Fight to the Death ... Don Frye vs. Yoshihiro Takayama",
+            "source_url": "https://www.youtube.com/watch?v=3LLVotwxz1s",
+            "file_size": 61.3809814453125,
+            "length": 499.465633,
+            "queue_source": "./video_upload_queue/7_0f4beb52-bea4-5f6f-8afc-df39129f5e26/",
+            "status": "queued",
+            "video_parts": null
         }
     ]
 }
