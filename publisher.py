@@ -31,7 +31,7 @@ class Publisher:
         )
         options.add_argument("window-size=1280,800")
         options.add_argument("--headless")
-        # options.add_argument("--disable-gpu")
+        options.add_argument("--disable-gpu")
         self.driver = webdriver.Chrome(
             options=options,
             executable_path="./chromedriver",
@@ -64,7 +64,7 @@ class Publisher:
                 last_bit = self.video.video_parts[0].split("_")[3]
                 title_number = int(last_bit.split(".")[0]) + 1
                 return f"{self.video.title} - Part {title_number}"
-            #return first 100 characters of title
+            # return first 100 characters of title
             return self.video.title[:100]
         return ""
 
@@ -189,8 +189,30 @@ class Publisher:
         sleep(1)
         ActionChains(self.driver).send_keys(Keys.TAB * 1).perform()
         ActionChains(self.driver).send_keys(
-            "#mma #fighter #boxing #fyp #foryou #trending #mindbody #body #ufc #martialarts"
+            "Welcome, young warriors! Fghting  is not just an adrenaline-packed display of skilled fighters engaging in combat sports. It's an opportunity to learn from the best and develop a deeper understanding of the techniques."
         ).perform()
+        sleep(1)
+        ActionChains(self.driver).send_keys(Keys.ENTER * 2).perform()
+        ActionChains(self.driver).send_keys(
+            "Fighting inspire and motivate us to push beyond our limits and achieve greatness. It's a way of life. It's a mindset. It's a war of mind."
+        ).perform()
+        ActionChains(self.driver).send_keys(Keys.ENTER * 2).perform()
+        ActionChains(self.driver).send_keys(
+            "Join us on our channel to become the ultimate warrior and develop your skills, mindset, and spirit. Hit that subscribe button and let's start the journey together!"
+        ).perform()
+        ActionChains(self.driver).send_keys(Keys.ENTER * 2).perform()
+        ActionChains(self.driver).send_keys(
+            "Follow us on Instagram: https://www.instagram.com/warofmind_/"
+        ).perform()
+        ActionChains(self.driver).send_keys(Keys.ENTER).perform()
+        ActionChains(self.driver).send_keys(
+            "Follow us on TikTok: https://www.tiktok.com/@__war_of_mind__"
+        ).perform()
+        ActionChains(self.driver).send_keys(Keys.ENTER * 2).perform()
+        ActionChains(self.driver).send_keys(
+            "#mma #fighter #boxing #fyp #foryou #trending #mindbody #body #ufc #martialarts #short #shorts"
+        ).perform()
+        ActionChains(self.driver).send_keys(Keys.ENTER * 2).perform()
         sleep(1)
         short_button = self.driver.find_element(
             By.XPATH,

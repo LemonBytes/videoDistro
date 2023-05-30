@@ -69,7 +69,7 @@ class Downloader:
             stream.download("./last_video_download/", "video.mp4")  # type: ignore
             print("finished downloading video")
         except Exception as e:
-            if counter > 25:
+            if counter > 200:
                 print(e)
                 raise Exception("Error downloading video")
             time.sleep(4)

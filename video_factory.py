@@ -1,6 +1,7 @@
 import json
 import os
 import random
+from typing import Optional
 from collector import Collector
 from publisher import Publisher
 from video import Video
@@ -11,10 +12,10 @@ from editor import Editor
 class VideoFactory:
     next_upload_number = 0
 
-    def __init__(self, max_limit=1) -> None:
+    def __init__(self, video: Optional[Video] = None,  max_limit=1) -> None:
         self.max_limit = max_limit
         self.limit = 0
-        self.video = None
+        self.video = video
 
     def start(self) -> None:
         while self.limit <= self.max_limit:
@@ -23,13 +24,13 @@ class VideoFactory:
                     print("new video queue")
                     self.video = Video(status="init")
                 else:
-                    if random.randint(1, 4) == 2:
+                    if random.randint(1, 1000) == 3:
                         print("new video")
                         self.video = Video(status="init")
                     else:
                         print("queue")
                         self.video = self.__get_video_from_queue()
-                        print(self.video.status)
+                        print(self.video.status)    
             while (
                 self.video
                 and isinstance(self.video, Video)
@@ -110,15 +111,15 @@ class VideoFactory:
             json.dump(data, f, indent=4)
 
     def __get_video_from_queue(self) -> Video:
-        length_of_queue = len(os.listdir("./video_upload_queue"))
-        random_number = random.randrange(0, length_of_queue)
-        folder = os.listdir("./video_upload_queue")[random_number]
-        video_id = folder[2:]
+        folders = os.listdir("./video_upload_queue")
+        folder = random.choice(folders)
+        video_id = folder.split("_")[1]
         with open("./videos.json", "r") as f:
             data = json.load(f)
             videos = data["videos"]
         for video in videos:
             if video["id"] == video_id:
+                print(video_id)
                 return Video(
                     id=video["id"],
                     title=video["title"],

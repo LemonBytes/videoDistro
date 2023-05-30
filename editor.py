@@ -6,7 +6,7 @@ from video import Video
 
 
 class Editor:
-    SEGEMENT = 60
+    SEGEMENT = 30
 
     def __init__(self, video: Video, next_upload_number: int):
         self.video = video
@@ -101,8 +101,9 @@ class Editor:
         )
 
         # list directory alphhabetic
-
-        self.video.video_parts = os.listdir(output_directory).sort(key=lambda x: int(x.split("_")[-1].split(".")[0]))
+        video_parts = os.listdir(output_directory)
+        video_parts.sort(key=lambda x: int(x.split("_")[-1].split(".")[0]))
+        self.video.video_parts = video_parts
         self.video.status = "queued"
         self.video.queue_source = output_directory
         return self.video
@@ -110,7 +111,7 @@ class Editor:
     def __get_cutting_part(self, seconds, segment_time=SEGEMENT):
         if seconds % segment_time <= 1 and segment_time <= self.SEGEMENT:
             return segment_time
-        elif segment_time <= 30:
+        elif segment_time <= 15:
             return segment_time
         return self.__get_cutting_part(seconds=seconds, segment_time=segment_time - 1)
 
@@ -119,7 +120,9 @@ class Editor:
             "./last_video_download/video.mp4",
             f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/{self.video.id}_video.mp4",
         )
-        self.video.queue_source = f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/"
+        self.video.queue_source = (
+            f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/"
+        )
         self.video.video_parts.append(f"{self.video.id}_video.mp4")
         self.video.status = "edited"
         return self.video
