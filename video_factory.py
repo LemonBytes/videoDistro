@@ -10,8 +10,6 @@ from editor import Editor
 
 
 class VideoFactory:
-    next_upload_number = 0
-
     def __init__(self, video: Optional[Video] = None,  max_limit=1) -> None:
         self.max_limit = max_limit
         self.limit = 0
@@ -20,7 +18,8 @@ class VideoFactory:
     def start(self) -> None:
         while self.limit <= self.max_limit:
             if self.video is None:
-                if not os.listdir("./video_upload_queue"):
+                print(len(os.listdir("./video_upload_queue")))
+                if len(os.listdir("./video_upload_queue")) < 2:
                     print("new video queue")
                     self.video = Video(status="init")
                 else:
@@ -30,13 +29,12 @@ class VideoFactory:
                     else:
                         print("queue")
                         self.video = self.__get_video_from_queue()
-                        print(self.video.status)    
+                        print(self.video.status)           
             while (
                 self.video
                 and isinstance(self.video, Video)
                 and self.video.status not in ("done", "error")
             ):
-                self.__get_next_upload_part()
                 if self.video.status == "init":
                     print("init")
                     collector = Collector(origin="reddit", video=self.video)
@@ -49,10 +47,8 @@ class VideoFactory:
                     self._update_video_json(self.video)
                     print(self.video.status)
                 if self.video.status == "downloaded":
-                    self.__create_folder(f"{self.next_upload_number}_{self.video.id}")
-                    editor = Editor(
-                        next_upload_number=self.next_upload_number, video=self.video
-                    )
+                    self.__create_folder(f"{self.video.id}")
+                    editor = Editor(video=self.video)
                     self.video = editor.edit()
                     self._update_video_json(self.video)
                     print(self.video.status)
@@ -72,15 +68,6 @@ class VideoFactory:
                     self.video = Video(status="init")
 
             break
-
-    def __get_next_upload_part(self):
-        all_folders = sorted(os.listdir("./video_upload_queue"))
-        next_folder_by_number = 0
-        for folder in all_folders:
-            folder_number = folder.split("_")[0]
-            if int(folder_number) > next_folder_by_number:
-                next_folder_by_number = int(folder_number)
-        self.next_upload_number = next_folder_by_number + 1
 
     def __create_folder(self, folder_name: str) -> None:
         try:
@@ -112,14 +99,13 @@ class VideoFactory:
 
     def __get_video_from_queue(self) -> Video:
         folders = os.listdir("./video_upload_queue")
-        folder = random.choice(folders)
-        video_id = folder.split("_")[1]
+        video_id = random.choice(folders)
         with open("./videos.json", "r") as f:
             data = json.load(f)
             videos = data["videos"]
         for video in videos:
             if video["id"] == video_id:
-                print(video_id)
+                print(video_id) 
                 return Video(
                     id=video["id"],
                     title=video["title"],

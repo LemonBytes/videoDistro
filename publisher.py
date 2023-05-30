@@ -30,7 +30,7 @@ class Publisher:
             "excludeSwitches", ["enable-logging", "enable-automation"]
         )
         options.add_argument("window-size=1280,800")
-        options.add_argument("--headless")
+        #options.add_argument("--headless")
         options.add_argument("--disable-gpu")
         self.driver = webdriver.Chrome(
             options=options,
@@ -105,8 +105,10 @@ class Publisher:
     def __setup(self):
         if self.driver is None:
             return 0
+        
+        self.driver.implicitly_wait(10)
         banner_button = self.driver.find_element(
-            By.XPATH, "/html/body/div[2]/div/div/button"
+            By.XPATH, "/html/body/div[3]/div/div/button"
         )
         sleep(1)
         self.driver.execute_script("arguments[0].click();", banner_button)
@@ -134,7 +136,7 @@ class Publisher:
         )
         sleep(1)
         print("uploading video...:" + self.__next_video_path())
-        upload_video_button.send_keys(os.path.abspath(self.__next_video_path()))
+        upload_video_button.send_keys("/video_upload_queue/video.mp4")
         self.driver.implicitly_wait(5)
         print("video upload successful")
 
@@ -210,7 +212,7 @@ class Publisher:
         ).perform()
         ActionChains(self.driver).send_keys(Keys.ENTER * 2).perform()
         ActionChains(self.driver).send_keys(
-            "#mma #fighter #boxing #fyp #foryou #trending #mindbody #body #ufc #martialarts #short #shorts"
+            "#mma #fighter #boxing #foryou #ufc #martialarts #short #shorts"
         ).perform()
         ActionChains(self.driver).send_keys(Keys.ENTER * 2).perform()
         sleep(1)
@@ -228,3 +230,18 @@ class Publisher:
         sleep(15)
         self.driver.quit()
         print("video publish successful")
+
+
+video =  Video(
+                    id="3d8b85f1-a399-56bc-bcaf-38785d889549",
+                    title="BKFC Michael Venom Page vs. Mike Perry",
+                    source_url="https://www.youtube.com/watch?v=LREGoZInYCo",
+                    file_size=None,
+                    video_length=None,
+                    queue_source="./video_upload_queue/video.mp4",
+                    status="pending",
+                    video_parts=None,
+                )
+
+publisher = Publisher(video=video)
+publisher.publish()

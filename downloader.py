@@ -72,8 +72,8 @@ class Downloader:
             if counter > 200:
                 print(e)
                 raise Exception("Error downloading video")
-            time.sleep(4)
-            print(f"counter:{counter}")  # import time
+            time.sleep(5)
+            print(f"retry:{counter}") 
             return self.__download_from_youtube(counter=counter + 1, new_url=new_url)
 
     def __download_dubz_videos(self):

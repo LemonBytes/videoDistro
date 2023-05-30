@@ -1,7 +1,8 @@
+import uuid
 from pytube import YouTube
 
 
-url = "https://youtube.com/watch?v=dPJCtzWeToE&feature=share"
+url = "https://www.youtube.com/watch?v=LREGoZInYCo"
 
 
 
@@ -19,4 +20,11 @@ def __download_from_youtube(counter=0):
             __download_from_youtube(counter=counter + 1)
 
 
-__download_from_youtube()            
+        
+
+
+def __extract_video_id(url):
+        video_id = str(uuid.uuid5(uuid.NAMESPACE_URL, url))
+        print(video_id)
+
+__extract_video_id(url)

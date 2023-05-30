@@ -8,9 +8,9 @@ from video import Video
 class Editor:
     SEGEMENT = 30
 
-    def __init__(self, video: Video, next_upload_number: int):
+    def __init__(self, video: Video):
         self.video = video
-        self.next_upload_number = next_upload_number
+
 
     def edit(self) -> Video:
         video = self.__get_meta_data()
@@ -54,7 +54,7 @@ class Editor:
 
     def __compress_video(self) -> Video:
         input_file = "./last_video_download/video.mp4"
-        output_file = f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/"
+        output_file = f"./video_upload_queue/{self.video.id}/"
 
         # specify output format and encoding options
         output_options = {
@@ -81,7 +81,7 @@ class Editor:
     def __split_video(self) -> Video:
         input_file = "./last_video_download/video.mp4"
         output_directory = (
-            f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/"
+            f"./video_upload_queue/{self.video.id}/"
         )
 
         segment_time = self.__get_cutting_part(self.video.length)
@@ -118,10 +118,10 @@ class Editor:
     def __move_video(self) -> Video:
         os.rename(
             "./last_video_download/video.mp4",
-            f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/{self.video.id}_video.mp4",
+            f"./video_upload_queue/{self.video.id}/{self.video.id}_video.mp4",
         )
         self.video.queue_source = (
-            f"./video_upload_queue/{self.next_upload_number}_{self.video.id}/"
+            f"./video_upload_queue/{self.video.id}/"
         )
         self.video.video_parts.append(f"{self.video.id}_video.mp4")
         self.video.status = "edited"
