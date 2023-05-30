@@ -105,7 +105,7 @@ celerybeat.pid
 #videos
 *.mp4
 
-#
+*.save
 
 # SageMath parsed files
 *.sage.py
