@@ -3,6 +3,7 @@ import os
 import random
 from typing import Optional
 from collector import Collector
+from injector import Injector
 from publisher import Publisher
 from video import Video
 from downloader import Downloader
@@ -10,15 +11,16 @@ from editor import Editor
 
 
 class VideoFactory:
-    def __init__(self, video: Optional[Video] = None,  max_limit=1) -> None:
+    def __init__(self, max_limit=1, video: Optional[Video] = None, inject:Optional[bool] = None) -> None:
         self.max_limit = max_limit
         self.limit = 0
         self.video = video
+        self.inject = inject
+
 
     def start(self) -> None:
         while self.limit <= self.max_limit:
-            if self.video is None:
-                print(len(os.listdir("./video_upload_queue")))
+            if self.video is None and self.inject is None:
                 if len(os.listdir("./video_upload_queue")) < 2:
                     print("new video queue")
                     self.video = Video(status="init")
@@ -29,7 +31,10 @@ class VideoFactory:
                     else:
                         print("queue")
                         self.video = self.__get_video_from_queue()
-                        print(self.video.status)           
+                        print(self.video.status)
+            if self.inject:         
+                injector = Injector()
+                self.video = injector.injectVideo()                          
             while (
                 self.video
                 and isinstance(self.video, Video)
@@ -124,7 +129,7 @@ class VideoFactory:
         video_paths = video.queue_source
         video_to_delete = video_paths + video.video_parts[0]
         os.remove(video_to_delete)
-        folders = os.listdir("./video_upload_queue")
+        folders = [f for f in os.listdir("./video_upload_queue") if not f.startswith('.')]
         for folder in folders:
             if not os.listdir(f"./video_upload_queue/{folder}"):
                 os.rmdir(f"./video_upload_queue/{folder}")

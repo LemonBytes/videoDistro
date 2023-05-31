@@ -136,7 +136,7 @@ class Publisher:
         )
         sleep(1)
         print("uploading video...:" + self.__next_video_path())
-        upload_video_button.send_keys("/video_upload_queue/video.mp4")
+        upload_video_button.send_keys(os.path.abspath(self.__next_video_path()))
         self.driver.implicitly_wait(5)
         print("video upload successful")
 
@@ -178,7 +178,7 @@ class Publisher:
         sleep(1)
         ActionChains(self.driver).send_keys(Keys.ENTER).perform()
         ActionChains(self.driver).send_keys(
-            "#mma#fighter#boxing#fyp#foryou#trending#ufc#body#sport#martialarts"
+            "#mma#fighter#boxing#fyp#foryou#ufc#body#sport#martialarts"
         ).perform()
         sleep(2)
 
@@ -232,16 +232,3 @@ class Publisher:
         print("video publish successful")
 
 
-video =  Video(
-                    id="3d8b85f1-a399-56bc-bcaf-38785d889549",
-                    title="BKFC Michael Venom Page vs. Mike Perry",
-                    source_url="https://www.youtube.com/watch?v=LREGoZInYCo",
-                    file_size=None,
-                    video_length=None,
-                    queue_source="./video_upload_queue/video.mp4",
-                    status="pending",
-                    video_parts=None,
-                )
-
-publisher = Publisher(video=video)
-publisher.publish()
