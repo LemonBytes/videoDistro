@@ -66,7 +66,6 @@ class Downloader:
                 new_url = res.url
             yt = YouTube(self.video.source_url)
             stream = yt.streams.get_highest_resolution()
-            print(stream)
             stream.download("./last_video_download/", "video.mp4")  # type: ignore
             print("finished downloading video")
         except Exception as e:

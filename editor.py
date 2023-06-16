@@ -1,12 +1,10 @@
-import json
-from math import floor
 import os
 import ffmpeg
 from video import Video
 
 
 class Editor:
-    SEGEMENT = 30
+    SEGEMENT = 50
 
     def __init__(self, video: Video):
         self.video = video
@@ -42,6 +40,7 @@ class Editor:
             self.video.length = duration
             return self.video
         except Exception as e:
+            print(e)
             self.video.status = "error"
             return self.video
 
