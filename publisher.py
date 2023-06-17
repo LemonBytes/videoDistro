@@ -45,6 +45,7 @@ class Publisher:
         self.__setup()
         self.__upload_video()
         self.__customize_youtube_upload()
+        self.__customize_tik_tok()
         self.__customize_instgram_upload()
         self.__publish_video()
         self.video.status = "done"
