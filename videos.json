@@ -1358,7 +1358,7 @@
                 "fefedf6a-f43b-5ef0-bc94-fc10edf08005_video_part_61.mp4"
             ]
         },
-	 {
+        {
             "id": "2d37bc20-815d-5f64-b93a-bc8b8fbf73b8",
             "title": "Wild KO's! Best Of BKFC",
             "source_url": "https://www.youtube.com/watch?v=0puXApDI4yg",
@@ -1395,6 +1395,28 @@
                 "2d37bc20-815d-5f64-b93a-bc8b8fbf73b8_video_part_28.mp4",
                 "2d37bc20-815d-5f64-b93a-bc8b8fbf73b8_video_part_29.mp4",
                 "2d37bc20-815d-5f64-b93a-bc8b8fbf73b8_video_part_30.mp4"
+            ]
+        },
+        {
+            "id": "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119",
+            "title": "Prodigy Kade Ruotolo\u2019s | WHOLE  OTHER LEVEL GRAPPLING",
+            "source_url": "https://www.youtube.com/watch?v=FJz-kx414sA",
+            "file_size": 63.02883338928223,
+            "length": 600.808542,
+            "queue_source": "./video_upload_queue/3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119/",
+            "status": "queued",
+            "video_parts": [
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_1.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_2.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_3.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_4.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_5.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_6.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_7.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_8.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_9.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_10.mp4",
+                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_11.mp4"
             ]
         }
     ]

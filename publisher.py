@@ -8,6 +8,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from dotenv import dotenv_values
 from time import sleep
 
@@ -106,7 +108,7 @@ class Publisher:
     def __setup(self):
         if self.driver is None:
             return 0
-        
+
         self.driver.implicitly_wait(10)
         banner_button = self.driver.find_element(
             By.XPATH, "/html/body/div[3]/div/div/button"
@@ -131,7 +133,8 @@ class Publisher:
         if self.driver is None:
             return 0
         upload_video_button = self.driver.find_element(
-            By.XPATH,'/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/div/input',
+            By.XPATH,
+            "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div[2]/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/div/input",
         )
         sleep(1)
         print("uploading video...:" + self.__next_video_path())
@@ -142,21 +145,23 @@ class Publisher:
             By.XPATH,
             "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/footer/div[1]/div/div/span[1]/span/span/i",
         )
-        
+
         self.driver.execute_script("arguments[0].click();", customize_button)
         print("video upload successful")
-
-
 
     def __customize_youtube_upload(self):
         if self.driver is None:
             return 0
-        
-        youtubeInput = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div[1]")
-        youtubeInput.click()
 
+        youtubeInput = self.driver.find_element(
+            By.XPATH,
+            "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[1]/div/div/div[1]",
+        )
+        youtubeInput.click()
         ActionChains(self.driver).send_keys("", self.__get_video_title()).perform()
+
         ActionChains(self.driver).send_keys(Keys.TAB * 1).perform()
+
         ActionChains(self.driver).send_keys(
             "Welcome, young warriors! Fighting  is not just an adrenaline-packed display of skilled fighters engaging in combat sports. It's an opportunity to learn from the best and develop a deeper understanding of the techniques."
         ).perform()
@@ -189,8 +194,15 @@ class Publisher:
         )
         self.driver.execute_script("arguments[0].click();", short_button)
         sleep(2)
+        ActionChains(self.driver).send_keys(Keys.TAB * 4).perform()
+
+    def __customize_tik_tok(self):
+        reminder = self.driver.find_element(
+            By.XPATH,
+            '//div[@class="u-cursor-pointer u-align-children-center u-width-max-content u-display-inline-flex radio__group__input u-margin-right-10 is-active undefined u-margin-top-10"]',
+        )
+        self.driver.execute_script("arguments[0].click();", reminder)
         ActionChains(self.driver).send_keys(Keys.TAB * 2).perform()
-      
 
     def __customize_instgram_upload(self):
         if self.driver is None:
@@ -210,12 +222,11 @@ class Publisher:
         ).perform()
         sleep(2)
         reel_button = self.driver.find_element(
-             By.XPATH,
-                "//div[contains(text(), 'Reel')]",
+            By.XPATH,
+            "//div[contains(text(), 'Reel')]",
         )
         self.driver.execute_script("arguments[0].click();", reel_button)
 
-   
     def __publish_video(self):
         publish_button = self.driver.find_element(
             By.XPATH,
@@ -225,4 +236,3 @@ class Publisher:
         sleep(15)
         self.driver.quit()
         print("video publish successful")
-    
