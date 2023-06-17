@@ -37,7 +37,7 @@ class Publisher:
             executable_path="./chromedriver",
         )
 
-    def publish_video(self):
+    def publish(self):
         self.__init_driver()
         self.__login()
         self.__setup()
