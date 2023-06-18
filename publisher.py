@@ -67,7 +67,7 @@ class Publisher:
             if len(self.video.video_parts) > 1:
                 last_bit = self.video.video_parts[0].split("_")[3]
                 title_number = int(last_bit.split(".")[0]) + 1
-                return f"{self.video.title} - Part {title_number}"
+                return f"{self.video.title} - ({title_number}/{len(self.video.video_parts)})"
             # return first 100 characters of title
             return self.video.title[:100]
         return ""
@@ -195,14 +195,15 @@ class Publisher:
         )
         self.driver.execute_script("arguments[0].click();", short_button)
         sleep(2)
-        ActionChains(self.driver).send_keys(Keys.TAB * 4).perform()
+        ActionChains(self.driver).send_keys(Keys.TAB * 3).perform()
 
     def __customize_tik_tok(self):
+        sleep(10)
         reminder = self.driver.find_element(
             By.XPATH,
-            '//div[@class="u-cursor-pointer u-align-children-center u-width-max-content u-display-inline-flex radio__group__input u-margin-right-10 is-active undefined u-margin-top-10"]',
+            "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div[2]/div/div/div/div/div[2]/div/span/div/div[2]/div[1]/div[2]/div[2]/span[1]",
         )
-        self.driver.execute_script("arguments[0].click();", reminder)
+        reminder.click()
         ActionChains(self.driver).send_keys(Keys.TAB * 2).perform()
 
     def __customize_instgram_upload(self):
@@ -219,9 +220,13 @@ class Publisher:
         sleep(1)
         ActionChains(self.driver).send_keys(Keys.ENTER).perform()
         ActionChains(self.driver).send_keys(
-            "#mma#fighter#boxing#fyp#foryou#ufc#body#sport#martialarts"
+            "#mma#fighter#boxing#foryou#ufc#martialarts"
         ).perform()
+        ActionChains(self.driver).send_keys(Keys.ENTER * 2).perform()
         sleep(2)
+        ActionChains(self.driver).send_keys(
+            "Fighting inspire and motivate us to push beyond our limits and achieve greatness. It's a way of life. It's a mindset. It's a war of mind."
+        ).perform()
         reel_button = self.driver.find_element(
             By.XPATH,
             "//div[contains(text(), 'Reel')]",

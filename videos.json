@@ -1406,7 +1406,6 @@
             "queue_source": "./video_upload_queue/3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119/",
             "status": "queued",
             "video_parts": [
-                "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_1.mp4",
                 "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_2.mp4",
                 "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_3.mp4",
                 "3e6fa524-3cbf-5a3c-b4d3-295fc9b2f119_video_part_4.mp4",
