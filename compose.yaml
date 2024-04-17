@@ -1,0 +1,7 @@
+services:
+  server:
+    tty: true
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
