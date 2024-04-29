@@ -85,7 +85,8 @@ ipython_config.py
 .python-version
 
 #video
-*.mp4
+/video_upload_queue/*.mp4
+/last_video_download/*.mp4
 
 
 # pipenv
@@ -102,8 +103,7 @@ __pypackages__/
 celerybeat-schedule
 celerybeat.pid
 
-#videos
-*.mp4
+
 
 *.save
 
