@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import ffmpeg
 from src.video import Video
 
@@ -8,6 +9,16 @@ class Editor:
 
     def __init__(self, video: Video):
         self.video = video
+        self.last_video_download = self.upload_queue = Path(
+            os.path.abspath(
+                f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/last_video_download/video.mp4"
+            )
+        )
+        self.upload_queue = Path(
+            os.path.abspath(
+                f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/video_upload_queue"
+            )
+        )
 
     def edit(self) -> Video:
         video = self.__get_meta_data()
@@ -15,7 +26,7 @@ class Editor:
             if video.length < 60 and video.file_size > 50:
                 self.__compress_video()
                 return self.video
-            elif video.length > 60:
+            elif video.length > 90:
                 video = self.__split_video()
                 return video
             else:
@@ -31,7 +42,7 @@ class Editor:
 
     def __get_video_seconds(self) -> Video:
         try:
-            probe = ffmpeg.probe("./last_video_download/video.mp4")
+            probe = ffmpeg.probe(self.last_video_download)
             video_info = next(
                 stream for stream in probe["streams"] if stream["codec_type"] == "video"
             )
@@ -44,15 +55,15 @@ class Editor:
             return self.video
 
     def __get_video_file_size(self) -> Video:
-        input = os.path.getsize("./last_video_download/video.mp4")
+        input = os.path.getsize(self.last_video_download)
         mega_bytes = input / 1024 / 1024
         self.video.file_size = mega_bytes
         print(f"Video file size: {mega_bytes} MB")
         return self.video
 
     def __compress_video(self) -> Video:
-        input_file = "./last_video_download/video.mp4"
-        output_file = f"./video_upload_queue/{self.video.id}/"
+        input_file = self.last_video_download
+        output_file = f"{self.upload_queue}/{self.video.id}/"
 
         # specify output format and encoding options
         output_options = {
@@ -77,8 +88,8 @@ class Editor:
         return self.video
 
     def __split_video(self) -> Video:
-        input_file = "./last_video_download/video.mp4"
-        output_directory = f"./video_upload_queue/{self.video.id}/"
+        input_file = self.last_video_download
+        output_directory = f"{self.upload_queue}/{self.video.id}/"
 
         segment_time = self.__get_cutting_part(self.video.length)
 
@@ -107,16 +118,16 @@ class Editor:
     def __get_cutting_part(self, seconds, segment_time=SEGEMENT):
         if seconds % segment_time <= 1 and segment_time <= self.SEGEMENT:
             return segment_time
-        elif segment_time <= 60:
+        elif segment_time <= 65:
             return segment_time
         return self.__get_cutting_part(seconds=seconds, segment_time=segment_time - 1)
 
     def __move_video(self) -> Video:
         os.rename(
-            "./last_video_download/video.mp4",
-            f"./video_upload_queue/{self.video.id}/{self.video.id}_video.mp4",
+            self.last_video_download,
+            f"{self.upload_queue}{self.video.id}/{self.video.id}_video.mp4",
         )
-        self.video.queue_source = f"./video_upload_queue/{self.video.id}/"
+        self.video.queue_source = f"{self.upload_queue}/{self.video.id}/"
         self.video.video_parts.append(f"{self.video.id}_video.mp4")
         self.video.status = "edited"
         return self.video

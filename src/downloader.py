@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 import time
 import urllib.request
 from bs4 import BeautifulSoup
@@ -10,10 +12,15 @@ class Downloader:
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
     }
-    default_download_path = "./last_video_download/video.mp4"
 
     def __init__(self, video: Video):
         self.video = video
+        self.directory = os.getcwd()
+        self.last_video_download = self.upload_queue = Path(
+            os.path.abspath(
+                f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/last_video_download/"
+            )
+        )
 
     def __get_sources(self):
         sources = [
@@ -66,7 +73,7 @@ class Downloader:
                 new_url = res.url
             yt = YouTube(self.video.source_url)
             stream = yt.streams.get_highest_resolution()
-            stream.download("./last_video_download/", "video.mp4")  # type: ignore
+            stream.download(self.last_video_download, "video.mp4")  # type: ignore
             print("finished downloading video")
         except Exception as e:
             print(e)
@@ -90,7 +97,7 @@ class Downloader:
             opener = urllib.request.build_opener()
             opener.addheaders = [("User-agent", "Mozilla/5.0")]
             urllib.request.install_opener(opener)
-            urllib.request.urlretrieve(f"{video_url}", self.default_download_path)
+            urllib.request.urlretrieve(f"{video_url}", self.last_video_download)
             print("finished downloading video")
         except Exception as e:
             print(e)
@@ -105,7 +112,7 @@ class Downloader:
             site = requests.get(self.video.source_url, headers=self.headers)
             soup = BeautifulSoup(site.content, "html.parser")
             video_url = soup.find("source", type="video/mp4")["src"]  # type: ignore
-            urllib.request.urlretrieve(f"{video_url}", self.default_download_path)
+            urllib.request.urlretrieve(f"{video_url}", self.last_video_download)
             print("finished downloading video")
         except Exception as e:
             print(e)
@@ -120,7 +127,7 @@ class Downloader:
             site = requests.get(self.video.source_url, headers=self.headers)
             soup = BeautifulSoup(site.content, "html.parser")
             video_url = soup.find("video", class_="video-player-tag")["src"]  # type: ignore
-            with open("./last_video_download/video.mp4", "wb") as f_out:
+            with open(f"{self.last_video_download}" + "/video.mp4", "wb") as f_out:
                 r = requests.get(f"https:{video_url}", stream=True)
                 for chunk in r.iter_content(chunk_size=1024 * 1024):
                     if chunk:
@@ -138,7 +145,7 @@ class Downloader:
             site = requests.get(self.video.source_url, headers=self.headers)
             soup = BeautifulSoup(site.content, "html.parser")
             video_url = soup.find("video", class_="video-player-tag")["src"]  # type: ignore
-            with open("./last_video_download/video.mp4", "wb") as f_out:
+            with open(f"{self.last_video_download}" + "/video.mp4", "wb") as f_out:
                 r = requests.get(f"{video_url}", stream=True)
                 for chunk in r.iter_content(chunk_size=1024 * 1024):
                     if chunk:

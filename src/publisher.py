@@ -32,19 +32,20 @@ class Publisher:
         options.add_experimental_option(
             "excludeSwitches", ["enable-logging", "enable-automation"]
         )
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("window-size=1280,800")
         options.add_argument("--disable-gpu")
         self.driver = webdriver.Chrome(
             options=options,
+            #/usr/local/bin/chromedriver-linux64/chromedriver
             executable_path="/usr/local/bin/chromedriver-linux64/chromedriver",
         )
 
     def publish(self):
         self.__init_driver()
         self.__login()
-        self.__close_boxes()
+        # self.__close_boxes()
         self.__upload_video()
         self.__customize_tik_tok()
         self.__publish_video()
@@ -89,10 +90,10 @@ class Publisher:
             # Manual login refresh cookie
             current_url = self.driver.current_url
             if current_url == "https://app.publer.io/users/sign_in":
-                cookieButton = self.driver.find_element(
+                """  cookieButton = self.driver.find_element(
                     By.XPATH, "/html/body/div[1]/div[1]/div/div[2]/a"
                 )
-                self.driver.execute_script("arguments[0].click();", cookieButton)
+                self.driver.execute_script("arguments[0].click();", cookieButton) """
                 self.driver.implicitly_wait(1)
                 user_input = self.driver.find_element(
                     By.XPATH, "/html/body/div/div[2]/div[1]/div[2]/form/input[3]"
@@ -113,7 +114,7 @@ class Publisher:
                     '//*[@id="application-container"]/div[2]/div[1]/div[2]/form/input[4]',
                 )
                 self.driver.execute_script("arguments[0].click();", login_button)
-            sleep(30)
+            sleep(5)
             pickle.dump(self.driver.get_cookies(), open("cookies.pkl", "wb"))
 
         except Exception as e:
@@ -121,55 +122,55 @@ class Publisher:
             self.driver.quit()
             exit(1)
 
-    #
-    #
-
     def __close_boxes(self):
-        sleep(15)
+        sleep(2)
         x_button = self.driver.find_element(
-            By.XPATH, "/html/body/div[2]/div/div/div[2]/button"
+            By.XPATH, "/html/body/div[3]/div/div/button"
         )
         self.driver.execute_script("arguments[0].click();", x_button)
 
-        second_x_button = self.driver.find_element(
+        """  second_x_button = self.driver.find_element(
             By.XPATH, "/html/body/div[3]/div/div/button"
         )
         sleep(2)
-        self.driver.execute_script("arguments[0].click();", second_x_button)
+        self.driver.execute_script("arguments[0].click();", second_x_button) """
 
     def __upload_video(self):
         if self.driver is None:
             return 0
+        sleep(2)
         upload_video_button = self.driver.find_element(
             By.XPATH,
             "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div/div/div/div/div[2]/div/span/div/div/div/div/div/div/div/div/div/input",
         )
         sleep(1)
         print("uploading video...:" + self.__next_video_path())
+        pickle.dump(self.driver.get_cookies(), open("cookies.pkl", "wb"))
         upload_video_button.send_keys(os.path.abspath(self.__next_video_path()))
 
-        self.driver.implicitly_wait(5)
+        """  self.driver.implicitly_wait(5)
         customize_button = self.driver.find_element(
             By.XPATH,
             "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/footer/div[1]/div/div/span[1]/span/span/i",
         )
 
-        self.driver.execute_script("arguments[0].click();", customize_button)
+        self.driver.execute_script("arguments[0].click();", customize_button) """
         print("video upload successful")
 
     def __customize_tik_tok(self):
-        sleep(90)
+        sleep(30)
         reminder = self.driver.find_element(
-            By.XPATH,
-            "/html/body/div[1]/div[2]/div/main/div/main/div[2]/div/div/div[3]/div/div/span/div/div/div[2]/div/div/div/div/div/div[2]/div/span/div/div[2]/div/div/div[2]/div[2]",
+            By.CSS_SELECTOR,
+            "#main-layout > div > main > div > div.new-post.macos-scrollbar > div > div:nth-child(3) > div > div > span > div > div > div.split-post > div > div > div > div > div > div.link-preview-type-link.undefined > div > span > div > div.u-padding-5.u-sm-margin-left-10.u-sm-margin-right-10.u-margin-bottom-10.u-padding-5 > div.u-margin-bottom-20 > div > div.u-display-flex.u-flex-direction-column > div:nth-child(2) > span.input_label.text-color-headline",
         )
         reminder.click()
 
+
     def __publish_video(self):
-        sleep(60)
+        sleep(30)
         publish_button = self.driver.find_element(
             By.XPATH,
-            "/html/body/div[1]/div[2]/div/main/div/main/div[2]/footer/div[2]/button[2]",
+            "/html/body/div[1]/div[2]/div/main/div/main/div/footer/div[2]/button[2]",
         )
         self.driver.execute_script("arguments[0].click();", publish_button)
 

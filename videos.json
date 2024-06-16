@@ -1,50 +1,33 @@
 {
     "videos": [
         {
-            "id": "261ac17c-228b-56ba-9a42-d291e763518a",
+            "id": "833c183c-faa5-5c99-92cb-0803e091faae",
             "title": "Wish me luck!",
-            "source_url": "https://www.youtube.com/watch?v=XZdE-PX0iqQ",
-            "file_size": 72.7914924621582,
-            "length": 591.28,
-            "queue_source": "./video_upload_queue/261ac17c-228b-56ba-9a42-d291e763518a/",
+            "source_url": "https://www.youtube.com/watch?v=w8OysXi65jU",
+            "file_size": 60.4462947845459,
+            "length": 470.6702,
+            "queue_source": "C:\\Users\\miche\\Desktop\\Projekte\\videoDistro\\video_upload_queue/833c183c-faa5-5c99-92cb-0803e091faae/",
             "status": "queued",
             "video_parts": [
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_0.mp4",
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_1.mp4",
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_2.mp4",
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_3.mp4",
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_4.mp4",
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_5.mp4",
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_6.mp4",
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_7.mp4",
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_8.mp4",
-                "261ac17c-228b-56ba-9a42-d291e763518a_video_part_9.mp4"
+                "833c183c-faa5-5c99-92cb-0803e091faae_video_part_0.mp4",
+                "833c183c-faa5-5c99-92cb-0803e091faae_video_part_1.mp4",
+                "833c183c-faa5-5c99-92cb-0803e091faae_video_part_2.mp4",
+                "833c183c-faa5-5c99-92cb-0803e091faae_video_part_3.mp4",
+                "833c183c-faa5-5c99-92cb-0803e091faae_video_part_4.mp4",
+                "833c183c-faa5-5c99-92cb-0803e091faae_video_part_5.mp4",
+                "833c183c-faa5-5c99-92cb-0803e091faae_video_part_6.mp4",
+                "833c183c-faa5-5c99-92cb-0803e091faae_video_part_7.mp4"
             ]
         },
         {
-            "id": "e8e35619-e273-5b7b-9e0b-f8bcc96acf68",
+            "id": "fd55ee17-f17d-50b2-9876-88db53bb4d26",
             "title": "Wish me luck!",
-            "source_url": "https://www.youtube.com/watch?v=CWmZj7yqSpQ",
-            "file_size": 107.2320909500122,
-            "length": 837.795292,
-            "queue_source": "./video_upload_queue/e8e35619-e273-5b7b-9e0b-f8bcc96acf68/",
-            "status": "queued",
-            "video_parts": [
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_0.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_1.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_2.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_3.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_4.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_5.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_6.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_7.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_8.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_9.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_10.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_11.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_12.mp4",
-                "e8e35619-e273-5b7b-9e0b-f8bcc96acf68_video_part_13.mp4"
-            ]
+            "source_url": "https://www.youtube.com/watch?v=JuBBIJ7adjM",
+            "file_size": null,
+            "length": null,
+            "queue_source": null,
+            "status": "downloaded",
+            "video_parts": []
         }
     ]
 }

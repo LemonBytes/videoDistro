@@ -85,7 +85,7 @@ ipython_config.py
 .python-version
 
 #video
-/video_upload_queue/*.mp4
+/video_upload_queue/*/*.mp4
 /last_video_download/*.mp4
 
 
@@ -102,7 +102,6 @@ __pypackages__/
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid
-
 
 
 *.save

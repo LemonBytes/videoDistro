@@ -21,7 +21,7 @@ RUN apt-get install -y google-chrome-stable
 # install chromedriver
 RUN apt-get install -yqq unzip
 RUN apt-get -y update
-RUN wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.86/linux64/chromedriver-linux64.zip
+RUN wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip
 RUN unzip -o /tmp/\*.zip  -d /usr/local/bin/
 
 RUN apt-get install -y ffmpeg
@@ -63,11 +63,12 @@ RUN  --mount=type=bind,source=requirements.txt,target=requirements.txt \
 # Copy the source code into the container.
 COPY . .
 
-RUN export PYTHONPATH="$PWD/app"
+RUN export PYTHONPATH="$PWD/app "
 
 # Expose the port that the application listens on.
 EXPOSE 8000
 
+RUN chmod 7777 main.py
 
 # Run the command on container startup
 CMD ["cron", "-f"]

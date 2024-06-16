@@ -9,6 +9,7 @@ from src.publisher import Publisher
 from src.video import Video
 from src.downloader import Downloader
 from src.editor import Editor
+from pathlib import Path
 
 
 class VideoFactory:
@@ -19,13 +20,24 @@ class VideoFactory:
         self.limit = 0
         self.video = video
         self.inject = inject
+        self.upload_queue = Path(
+            os.path.abspath(
+                f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/video_upload_queue/"
+            )
+        )
+        self.video_folder = Path(
+            os.path.abspath(
+                f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/videos.json"
+            )
+        )
 
     def start(self) -> None:
+
         while self.limit <= self.max_limit:
             # folder has atleast on file because of git keep
             injector = Injector()
             if (
-                len(os.listdir("./video_upload_queue")) == 1
+                len(os.listdir(self.upload_queue)) == 1
                 and injector.get_len_of_upcomming() == 0
             ):
                 notice_injector = NoticeInjector()
@@ -33,7 +45,7 @@ class VideoFactory:
                 self.video = notice_injector.inject_notice_video()
                 fetch_upcomming.download_new_list()
                 print("notice")
-            elif len(os.listdir("./video_upload_queue")) < 5:
+            elif len(os.listdir(self.upload_queue)) < 5:
                 self.video = injector.inject_video()
                 print("inject")
             if self.video is None:
@@ -74,12 +86,12 @@ class VideoFactory:
 
     def __create_folder(self, folder_name: str) -> None:
         try:
-            os.mkdir(f"./video_upload_queue/{folder_name}")
+            os.mkdir(f"{self.upload_queue}/{folder_name}")
         except Exception as e:
             print(e)
 
     def _update_video_json(self, video: Video) -> None:
-        with open("./videos.json", "r") as f:
+        with open(self.video_folder, "r") as f:
             data = json.load(f)
             videos = data["videos"]
 
@@ -97,15 +109,15 @@ class VideoFactory:
             videos[index] = video.__dict__
         else:
             videos.append(video.__dict__)
-        with open("./videos.json", "w") as f:
+        with open(self.video_folder, "w") as f:
             json.dump(data, f, indent=4)
 
     def __get_video_from_queue(self) -> Video:
-        folders = os.listdir("./video_upload_queue")
+        folders = os.listdir(self.upload_queue)
         folders[:] = [firstchar for firstchar in folders if firstchar[0] != "."]
 
         video_id = random.choice(folders)
-        with open("./videos.json", "r") as f:
+        with open(self.video_folder, "r") as f:
             data = json.load(f)
             videos = data["videos"]
         for video in videos:
@@ -129,12 +141,10 @@ class VideoFactory:
         video_paths = video.queue_source
         video_to_delete = video_paths + video.video_parts[0]
         os.remove(video_to_delete)
-        folders = [
-            f for f in os.listdir("./video_upload_queue") if not f.startswith(".")
-        ]
+        folders = [f for f in os.listdir(self.upload_queue) if not f.startswith(".")]
         for folder in folders:
-            if not os.listdir(f"./video_upload_queue/{folder}"):
-                os.rmdir(f"./video_upload_queue/{folder}")
+            if not os.listdir(f"{self.upload_queue}/{folder}"):
+                os.rmdir(f"{self.upload_queue}/{folder}")
         video.video_parts.pop(0)
         print(video.video_parts)
         if len(video.video_parts) > 0:
